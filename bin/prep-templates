@@ -6,6 +6,7 @@ use File::Basename;
 use Goofalicious::ImageView::Organiser;
 use Term::Interact;
 use File::Touch;
+use Getopt::Long;
 
 my $template    = '/home/dmcgarry/template.nfo';
 my $holding     = '/home/dmcgarry/holding/';
@@ -16,22 +17,26 @@ my $first       = 1;
 my @categories  = ();
 my $description;
 
+my $force = 0;
+
+GetOptions ("force|f"  => \$force);
+
 my $shell = Term::Interact->new();
 
 my %months = (
-							'01'      => 'January',
-							'02'      => 'February',
-							'03'      => 'March',
-							'04'      => 'April',
-							'05'      => 'May',
-							'06'      => 'June',
-							'07'      => 'July',
-							'08'      => 'August',
-							'09'      => 'September',
-							'10'      => 'October',
-							'11'      => 'November',
-							'12'      => 'December'
-             );
+    '01'      => 'January',
+    '02'      => 'February',
+    '03'      => 'March',
+    '04'      => 'April',
+    '05'      => 'May',
+    '06'      => 'June',
+    '07'      => 'July',
+    '08'      => 'August',
+    '09'      => 'September',
+    '10'      => 'October',
+    '11'      => 'November',
+    '12'      => 'December'
+    );
 
 my %locations = (
 		vila      => 'Port Vila',
@@ -72,6 +77,8 @@ my %locations = (
 		apia      => 'Apia, Samoa',
 		auckland  => 'Auckland, New Zealand',
 		suva      => 'Suva, Fiji',
+		bali      => 'Bali, Indonesia',
+		lombok    => 'Lombok, Indonesia',
 		);
 
 my @jpegs = `ls $holding\*jpg`;
@@ -82,6 +89,13 @@ foreach (sort @jpegs) {
   my $jpeg = $_;
   chomp $jpeg;
 
+  my $duplicate = $website_dir . '/' . basename $jpeg;
+
+  if ($force && -e $duplicate){
+      warn "File '$duplicate' already exists. Skipping...\n";
+      next;
+  }
+
   system ('chmod', 644, $jpeg) == 0
     or warn "Unable to set permissions for '$jpeg': $?\n";
 
@@ -91,7 +105,7 @@ foreach (sort @jpegs) {
   my ($year, $month, @remainder) = split(/\:/, $info->{FileModifyDate});
   my $date_string = $months{$month} . ", $year";
 
-	my $this_file_name = $info->{FileName};
+  my $this_file_name = $info->{FileName};
 
   my @title_elements = split(/\-/, $info->{FileName});
   my $location = shift @title_elements;
@@ -113,53 +127,53 @@ foreach (sort @jpegs) {
   $title = join(" ", @title_elements);
   chomp $title;
 
-	# Don't extend batch mode across different
-	# titles.
-	unless (cmp_files($jpeg, $last_file)){
-		$batch = 0;
-		$first = 1;
-	}
-	$last_file = $jpeg;
+  # Don't extend batch mode across different
+  # titles.
+  unless (cmp_files($jpeg, $last_file)){
+      $batch = 0;
+      $first = 1;
+  }
+  $last_file = $jpeg;
 
   if ($file_num > 1){ # && $first != 1){
-    $title = "$title " . sprintf("%02d", $file_num) . " - $location";
-		unless ($batch){
-			if (prompt("Use the same values as before for '$title'?") eq 'y'){
-				$batch++;
-				$first++;
-			}
-		}
-	}
+      $title = "$title " . sprintf("%02d", $file_num) . " - $location";
+      unless ($batch){
+	  if (prompt("Use the same values as before for '$title'?") eq 'y'){
+	      $batch++;
+	      $first++;
+	  }
+      }
+  }
   else {
-		$batch = 0;
-		$first = 1;
+      $batch = 0;
+      $first = 1;
   }
 
   my $default_title = $title;
 
-	my $ok = '';
-	unless ($batch){
-    $title = "$title " . sprintf("%02d", $file_num) . " - $location";
-		while ($ok = prompt("Title:", $title)){
-			last if $title eq $ok;
-			$title = $ok;
-		}
-		chomp $title;
-	}
+  my $ok = '';
+  unless ($batch){
+      $title = "$title " . sprintf("%02d", $file_num) . " - $location";
+      while ($ok = prompt("Title:", $title)){
+	  last if $title eq $ok;
+	  $title = $ok;
+      }
+      chomp $title;
+  }
 
   my $dest = $jpeg;
   $dest =~ s!jpg$!nfo!;
 
-	unless ($batch && $description){
-		$description = prompt("Enter a description for '$title'");
-		chomp $description;
-		
-		$ok = '';
-		while ($ok = prompt("Confirm description: '$description'")){
-			$description = $ok;
-		}
-		chomp $description;
-	}
+  unless ($batch && $description){
+      $description = prompt("Enter a description for '$title'");
+      chomp $description;
+      
+      $ok = '';
+      while ($ok = prompt("Confirm description: '$description'")){
+	  $description = $ok;
+      }
+      chomp $description;
+  }
 
   print "Creating $dest\n";
 
