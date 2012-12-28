@@ -1,0 +1,32 @@
+#!/usr/bin/perl -w
+
+use strict;
+use Cwd qw (getcwd);
+use File::Find;
+
+my @dir_list = @ARGV;
+
+foreach (@dir_list){
+  print "Searching $_ \.\.\.\n";
+}
+
+unless (scalar @dir_list){
+  push @dir_list, getcwd;
+}
+
+sub remove_backups {
+
+  my $file = $File::Find::name;
+
+  if (
+      -f $file && 
+      ($file =~ /\~$/ || $file =~ /\#^/)
+     ){
+    print "Removing $file\n";
+    unlink $file or warn "Couldn't remove file '$file': $!\n";
+  }
+}
+
+find(\&remove_backups, @dir_list);
+
+exit 1;

@@ -1,0 +1,17 @@
+MANIFEST
+README
+LICENSE
+Todo
+Changes
+Makefile.PL
+lib/Goofalicious.pm
+lib/Goofalicious/Dreams.pm
+lib/Goofalicious/ImageView.pm
+lib/Goofalicious/ImageView/Parser.pm
+lib/Goofalicious/ImageView/Sizer.pm
+lib/Goofalicious/ImageView/Organiser.pm
+bin/add-thumbnail-to-summaries.pl
+bin/random-photos
+bin/noback
+bin/prep-templates
+t/001_load.t

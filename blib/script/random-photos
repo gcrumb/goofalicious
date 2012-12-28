@@ -1,0 +1,42 @@
+#!/usr/bin/perl -w
+
+eval 'exec /usr/bin/perl -w -S $0 ${1+"$@"}'
+    if 0; # not running under some shell
+
+use strict;
+
+my $base_dir = '/srv/websites/imagicity';
+
+opendir IMAGES, $base_dir or die "Coulnd't open dir '$base_dir': $!\n";
+
+my @files = grep {/nfo$/} readdir IMAGES;
+
+closedir IMAGES;
+my @random_files;
+my $file_count = 20;
+
+my $counter = 1;
+while ($counter <= $file_count){
+  my $file_name = @files[int(rand(scalar @files))];
+
+  $file_name =~ s!nfo$!jpg!;
+
+  unless (grep {/$file_name/} @random_files){
+    push @random_files, $file_name;
+    $counter++;
+  }
+}
+
+open RANDOM, ">$base_dir/random" 
+  or die "Couldn't open random file for output: $!\n";
+
+while (scalar @random_files){
+
+  my $this_file = pop(@random_files);
+  print RANDOM "$this_file\n";
+
+}
+
+close RANDOM;
+
+exit 0;

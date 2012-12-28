@@ -1,0 +1,12 @@
+#!/bin/bash
+cd /srv/websites/imagicity/
+
+echo "Generating recent file..."
+
+find . -type f -name '*-[0-9].jpg' -ctime -90 -ctime +45 | sort > /srv/websites/gallery.imagicity.com/recent
+
+echo "Generating latest file"
+
+find . -type f -name '*-[0-9].jpg' -ctime -45 | sort > /srv/websites/gallery.imagicity.com/latest
+
+echo "Done"

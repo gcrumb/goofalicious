@@ -1,0 +1,1 @@
+sudo tail -f /var/log/apache2/access.log |  perl -e 'while (<STDIN>){ if ($_ =~ /GET \/imageview\.html/i && $_ =~ /(^\d.*?)\s\-.*?\"(.*?)\".*/ ) {$ip = $1; $pic = $2; $pic =~ s! HTTP/1.\d!!; print "$ip\t\t$pic\n" }}'

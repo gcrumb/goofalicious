@@ -1,0 +1,338 @@
+#!/usr/bin/perl -w
+
+eval 'exec /usr/bin/perl -w -S $0 ${1+"$@"}'
+    if 0; # not running under some shell
+
+use strict;
+use Image::ExifTool ':Public';
+use File::Basename;
+use Goofalicious::ImageView::Organiser;
+use Term::Interact;
+use File::Touch;
+
+my $template    = '/home/dmcgarry/template.nfo';
+my $holding     = '/home/dmcgarry/holding/';
+my $website_dir = '/srv/websites/gallery.imagicity.com/';
+my $title       = '';
+my $batch       = 0;
+my $first       = 1;
+my @categories  = ();
+my $description;
+
+my $shell = Term::Interact->new();
+
+my %months = (
+							'01'      => 'January',
+							'02'      => 'February',
+							'03'      => 'March',
+							'04'      => 'April',
+							'05'      => 'May',
+							'06'      => 'June',
+							'07'      => 'July',
+							'08'      => 'August',
+							'09'      => 'September',
+							'10'      => 'October',
+							'11'      => 'November',
+							'12'      => 'December'
+             );
+
+my %locations = (
+		vila      => 'Port Vila',
+		blacksand => 'Blacksand beach, near Port Vila',
+		freswota  => 'Freswota, Port Vila',
+		pentecost => 'Pentecost Island',
+		rentapao  => 'Renatapao, Efate Island',
+		dili      => 'Dili, Timor-Leste',
+		timor     => 'Timor-Leste',
+		baucau    => 'Baucau, Timor-Leste',
+		venilale  => 'Venilale, Timor-Leste',
+		lospalos  => 'Los Palos, Timor-Leste',
+		pipp      => 'Pacific Institute of Public Policy',
+		mele      => 'Mele village, Efate Island',
+		ns        => 'Nova Scotia',
+		chelsea   => 'Chelsea, Quebec',
+		ottawa    => 'Ottawa, Ontario',
+		lolowei   => 'Lolowei, Ambae Island',
+		tanna     => 'Tanna Island',
+		lenakel   => 'Lenakel, Tanna Island',
+		malekula  => 'Malekula Island',
+		atchin    => 'Atchin, Malekula Island',
+		lambubu   => 'Lambubu Bay, Malekula Island',
+		lakatoro  => 'Lakatoro, Malekula Island',
+		norsup    => 'Norsup, Malekula Island',
+		suranda   => 'Suranda, Espiritu Santo Island',
+		usp       => 'University of the South Pacific, Port Vila',
+		wellington=> 'Wellington, New Zealand',
+		erakor    => 'Erakor, Efate Island',
+		sydney    => 'Sydney, Australia',
+		noumea    => 'Noum&eacute;a, New Caledonia',
+		lalwari   => 'Lalwari village, Pentecost Island',
+		santo_trip=> 'Santo Trip',
+		paama     => 'Paama Island',
+		moresby   => 'Port Moresby, Papua New Guinea',
+		brisbane  => 'Brisbane, Australia',
+		honiara   => 'Honiara, Solomon Islands',
+		apia      => 'Apia, Samoa',
+		auckland  => 'Auckland, New Zealand',
+		suva      => 'Suva, Fiji',
+		);
+
+my @jpegs = `ls $holding\*jpg`;
+my $last_file = '';
+
+foreach (sort @jpegs) {
+
+  my $jpeg = $_;
+  chomp $jpeg;
+
+  system ('chmod', 644, $jpeg) == 0
+    or warn "Unable to set permissions for '$jpeg': $?\n";
+
+  # Grab metadata
+  my $info = ImageInfo($jpeg);
+
+  my ($year, $month, @remainder) = split(/\:/, $info->{FileModifyDate});
+  my $date_string = $months{$month} . ", $year";
+
+	my $this_file_name = $info->{FileName};
+
+  my @title_elements = split(/\-/, $info->{FileName});
+  my $location = shift @title_elements;
+
+  if (exists($locations{$location})){
+    $location = $locations{$location};
+  }
+  else {
+    $location =~ s/$location/\u$location/;
+  }
+
+  my $file_num = pop @title_elements;
+  $file_num =~ s/\.jpg$//;
+
+  foreach (@title_elements){
+    $_ =~ s/$_/\u$_/;
+  }
+
+  $title = join(" ", @title_elements);
+  chomp $title;
+
+	# Don't extend batch mode across different
+	# titles.
+	unless (cmp_files($jpeg, $last_file)){
+		$batch = 0;
+		$first = 1;
+	}
+	$last_file = $jpeg;
+
+  if ($file_num > 1){ # && $first != 1){
+    $title = "$title " . sprintf("%02d", $file_num) . " - $location";
+		unless ($batch){
+			if (prompt("Use the same values as before for '$title'?") eq 'y'){
+				$batch++;
+				$first++;
+			}
+		}
+	}
+  else {
+		$batch = 0;
+		$first = 1;
+  }
+
+  my $default_title = $title;
+
+	my $ok = '';
+	unless ($batch){
+    $title = "$title " . sprintf("%02d", $file_num) . " - $location";
+		while ($ok = prompt("Title:", $title)){
+			last if $title eq $ok;
+			$title = $ok;
+		}
+		chomp $title;
+	}
+
+  my $dest = $jpeg;
+  $dest =~ s!jpg$!nfo!;
+
+	unless ($batch && $description){
+		$description = prompt("Enter a description for '$title'");
+		chomp $description;
+		
+		$ok = '';
+		while ($ok = prompt("Confirm description: '$description'")){
+			$description = $ok;
+		}
+		chomp $description;
+	}
+
+  print "Creating $dest\n";
+
+  open OUT, ">$dest" or die
+    "Couldn't open file '$dest' for output: $!\n";
+
+  print OUT <<EOF;
+<p class='name'>$title</p>
+<p>
+$description
+</p>
+<p>$date_string</p>
+EOF
+
+  close OUT;
+
+	unless ($batch && scalar @categories){
+		@categories = get_categories();
+	}
+
+  foreach my $this_category (sort @categories){
+
+    chomp $this_category;
+
+    my $entry = basename($jpeg);
+
+    if (-f "$website_dir/$this_category"){
+
+      open CAT_CHECK, "$website_dir/$this_category"
+        or die "Unable to open file '$website_dir/$this_category': $!\n";
+
+      my @checked_files = ();
+
+      while (<CAT_CHECK>){
+        chomp $_;
+        push @checked_files, $_;
+      }
+      close CAT_CHECK;
+
+      if (grep /$entry/, @checked_files){
+        print "File '$entry' is already listed in $this_category. Skipping.\n";
+        next;
+      }
+    }
+    else {
+
+      my $response = prompt("Category '$this_category' doesn't exist. Create it?");
+      next unless $response eq 'y';
+
+    }
+
+    open CATEGORY, ">>$website_dir/$this_category"
+      or die "Unable to open file '$website_dir/$this_category' for output: $!\n";
+    print CATEGORY "$entry\n";
+    close CATEGORY;
+  }
+}
+
+my $deploy = prompt("The files are ready now. Deploy them?");
+
+if ($deploy eq 'y'){
+
+  my @files = `ls $holding`;
+
+  foreach (@files){
+    chomp $_;
+    print "Deploying '$_' from '$holding' to '$website_dir'\n";
+    system(
+           'mv',
+           "$holding/$_",
+           $website_dir
+          ) == 0 or warn "Unable to move '$_'! $?\n";
+  }
+}
+
+my $response = prompt("Update the date templates?");
+
+if ($response eq 'y'){
+
+  my $organiser = new Goofalicious::ImageView::Organiser;
+
+  die "Organiser didn't initialise properly!\n"
+    unless defined $organiser;
+
+  my $results = $organiser->by_date();
+
+  $organiser->latest();
+  $organiser->recent();
+
+  print "Updated date listing for $results files\n";
+
+}
+
+#system ('/home/dmcgarry/bin/make-latest') == 0
+#  or warn "Automated updating of latest photo index failed!\n\n";
+
+print "All done!\n";
+
+exit 0;
+
+
+sub prompt{
+
+   my ($prompt_string,$default_value) = @_;
+
+   if (defined $default_value && $default_value){
+     $prompt_string .= " [" . $default_value . "]:";
+   }
+   else{
+     $default_value = '';
+   }
+
+   my $result = $shell->get(
+                            msg      => $prompt_string,
+                            default  => $default_value,
+                           );
+
+   if (defined $default_value && $default_value) {
+      return $result ? $result : $default_value;    # return $_ if it has a value
+   } else {
+      return $result;
+   }
+
+}
+
+sub get_categories {
+
+  my @result = ();
+  my $category_text = prompt("Enter 1 or more categories for '$title'");
+
+  my @categories = split(/\s+/, $category_text);
+
+  foreach my $this_category (@categories){
+    push (@result, $this_category) if vet_category($this_category);
+  }
+
+  my $output;
+
+  while ($output = prompt("Any more?")){
+
+    my @additional = split(/\s+/, $output);
+
+    foreach my $more (@additional){
+      push (@result, $more) if vet_category($more);
+    }
+  }
+
+  return @result;
+
+}
+
+sub vet_category{
+
+  my $this_category = shift;
+  chomp $this_category;
+
+  unless (-f "$website_dir/$this_category"){
+    if (prompt("Category '$this_category' doesn't exist. Create it?") eq 'y'){
+      touch "$website_dir/$this_category";
+    }
+  }
+}
+
+sub cmp_files {
+
+  my ($a, $b) = @_;
+
+  foreach ($a, $b){
+    $_ =~ s!\d!!g;
+  }
+
+  return ($a eq $b);
+}
