@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+
+    <title>Imagicity | Photography - exotica, mundanity and wonders | Graham Crumb, Proprietor</title>
+    
+    <link rel="stylesheet" href="http://imagicity.com/wp-content/themes/rockinblack-3col-1/style.css" type="text/css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="/imagicity.css" />
+
+		<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-22926683-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js" type="text/javascript"></script>
+		<script src="/masonry.pkgd.js"></script>
+		<script src="/imagesloaded.pkgd.js"></script>
+<script type="text/javascript">
+
+
+var running = true;
+
+$(document).ready(function() {
+
+		$('#mosaic').masonry({
+				columnWidth: 20,
+				gutter: 5,
+				itemSelector: '.item'
+		});
+
+		$('img').hover(
+				function(){
+						$(this).fadeTo(250, 1.0);
+				},
+				function () {
+						$(this).fadeTo(250, 0.8);
+				}
+		);
+
+/*
+		$('p.item').hover(
+				function() {
+						$(this).children('span.item-desc').fadeTo(150, 1.0);
+				},
+				function() {
+						$(this).children('span.item-desc').fadeTo(150, 0);
+				}
+		);
+*/
+		$('DIV#slideshow').hover(function (){
+				$(this).css('opacity', '0.9');
+				$('#slideshow DIV#next').fadeIn();
+				running = false;
+		}, function(){
+				$(this).css('opacity', '1.0');
+				$('#slideshow DIV#next').fadeOut();
+				running = true;
+		});
+		
+		$('#slideshow DIV#next a').hover(function(){
+				running = false;
+		},
+																		 function (){
+																				 running = true;
+																		 });
+		
+		$('#slideshow DIV#next a').click(function(){
+				running = true;
+				slideSwitch();
+				running = false;
+				return false;
+		});
+});
+
+function slideSwitch() {
+		
+		if (!running){
+				return;
+		}
+		
+		var fadeInTime  = 1000;
+		var fadeOutTime = 250;
+		
+		var $active = $('#slideshow DIV.active');
+		
+ 		if ( $active.length == 0 ) $active = $('#slideshow DIV:last');
+		
+		// use this to pull the divs in the order they appear in the markup
+		var next = 0;
+		$next =  $active.next().length ? $active.next()
+				: $('#slideshow DIV:first').next(); //the first div is actually the 'next' button.
+		
+		$active.addClass('last-active');
+		
+		$next.css({opacity: 0.0})
+				.addClass('active')
+				.animate({opacity: 1.0}, fadeInTime, function() {
+						$active.animate({opacity:0}, fadeOutTime);
+						$active.removeClass('active last-active');
+				});
+}
+
+$(function() {
+		setInterval( "slideSwitch()", 7000 );
+});
+
+
+
+</script>
+
+  </head>
+    <body>
+      <div id="header">
+        <div align="center"><a href="http://imagicity.com/" style="border:none;" ><img src="http://imagicity.com/wp-content/themes/rockinblack-3col-1/images/imagicity-banner-5.jpg" alt="Imagicity | Photography - exotica, mundanity and wonders | Proprietor: Graham Crumb" title="Imagicity | Photography - exotica, mundanity and wonders | Proprietor: Graham Crumb" style="border:none;" /></a>
+        </div>
+      </div>
+      
+      <div id="container">
+
+        <div id="menu">
+          <ul>
+            <li class="page_item"><a href="http://imagicity.com">Home</a></li>
+            <li class="page_item page-item-2"><a href="http://imagicity.com/about/" 
+                title="About this site">About this site</a></li>
+            <li class="page_item page-item-10"><a href="http://imagicity.com/categorical-listing/" 
+                title="Categorical Listing">Categorical Listing</a></li>
+            <li class="page_item page-item-8"><a href="http://imagicity.com/gallery-archive/" 
+                title="Historical Listing">Historical Listing</a></li>
+          </ul>
+        </div>
+
+        <p class="image" style="border: none;"><imageholder>image_goes_here</imageholder></p>
+				<div class="mosaic" id="mosaic">
+					<meta>meta_goes_here</meta>
+        <menu>menu_goes_here</menu>
+		</div>
+    </div>
+    <p style="border: none; text-align: right;"><small>Imagicity | Photography - exotica, mundanity and wonders | &copy; <a href="mailto:gcrumb@gmail.com">Graham Crumb</a></small></p>
+    </body>
+  </html>

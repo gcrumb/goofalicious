@@ -1,0 +1,416 @@
+/*  
+Theme Name: RockinBlack 3Col
+Author URI: http://corymiller.com
+Version: 1
+Author: Cory Miller
+Description: RockinBlack is a black and white, clean and simple, three-column theme designed with little elements for the minimalist in mind, includes an easy-to-replace graphical header.
+The CSS, XHTML and design is released under GPL: 
+http://www.opensource.org/licenses/gpl-license.php
+*/
+
+#flickr-photos {
+	background: #111;
+	padding: 10px;
+	text-align: center;
+	}
+
+#flickr-photos img {
+	border: 1px solid #ccc;
+	}
+
+#flickr-photos h2 {
+	text-align: left;
+	padding-left: 5px;
+	}
+
+body {
+	background: #000000;
+	color: #ffffff;
+	font-size: 11px;
+	font-family: Verdana, Helvetica, Arial, Sans-Serif;
+	margin: 0px 0px 0px 0px;
+	}
+a{
+        color: #ffcc33;
+        text-decoration: none;
+	} 
+a:visited{
+	color: #fff;
+	text-decoration: none;
+	}
+	
+a:hover{
+	color: #ffcc00;
+	background: #222;
+	text-decoration: none;
+	}
+
+#header { 
+	background: #000000;
+	padding: 0px 0px 0px 20px;
+	margin-bottom: 0px;
+	}
+#header h2 {
+	color: #ffffff;
+	font-size: 35px;
+	font-family: Verdana, Times New Roman, Sans-Serif;
+	font-variant: small-caps;
+	margin: 0px;
+	}
+
+#header h2 a {
+	color: #ffffff;
+	text-decoration: none;
+	}
+
+#header h2 a:hover {
+	color: #000000;
+	background: #00ccff;
+	text-decoration: none;
+	}
+
+#header h3 {
+	color: #cccccc;
+	font-size: 16px;
+	font-family: Georgia, Times New Roman, Sans-Serif;
+	font-weight: bold;
+	margin: 0px;
+	}
+
+#menu { 
+	margin-top: 0px;
+	margin-bottom: 25px; 
+	padding: 6px;
+	text-align: center;
+border-bottom: 1px solid #444444;
+	}
+#menu h2 {
+	color: #ffffff;
+	font-size: 13px;
+	font-family: Verdana, Helvetica, Arial, Sans-Serif;
+	font-weight: bold;
+	margin: 0px;
+	padding: 0px 0px 0px 0px;
+	}
+#menu li {
+	display: inline;
+	list-style-type: none;
+	margin: 0px;
+	padding: 0px;
+	}
+		
+#menu ul {
+	margin: 0px;
+	padding: 4px;
+	}
+	
+#menu ul li a {
+	font-family: Verdana, Helvetica, Arial, Sans-Serif;
+	font-size: 13px;
+	color: #ffffff;
+	padding: 6px 60px 6px 60px;
+	margin: 0px 3px 0px 3px;
+	text-decoration: none;
+	}
+
+#menu ul li a:hover {
+	color: #ffffff;
+	padding: 6px 60px 6px 60px;
+	text-decoration: underline;
+	}
+#tag_cloud a {
+        color: #fff;
+        text-decoration: none;
+	}
+
+#container { 
+	width: 90%;
+	text-align: left; 
+	margin: 0px auto; 
+	border: 1px solid #444444;
+}
+
+#container a{
+        /* color: #fff; */
+        text-decoration: none;
+	}
+#container a:hover {
+        color: #ffcc33;
+}
+#content {
+        background: #111;
+        border: 2px solid #222;
+	border-top: none;
+	/* width: 780px; */
+	margin-top: 10px;
+	margin-bottom: 20px;
+	margin-left: 13px;
+	margin-right: 0px;
+	position:relative;
+	padding: 10px 25px 15px 25px;
+	}
+#content hr {
+	margin-left: -10px;
+	}
+#content p{
+	background: #222;
+	border-left: 2px solid #000;
+	border-right: 2px solid #000;
+	margin: 0px;
+	line-height: 18px;
+	padding: 10px 10px 10px 5px;
+	}
+#content p a {
+	color: #ffcc33;
+}
+#content p a:hover {
+        color: #ffcc33;
+	text-decoration: underline;
+}
+#content img {
+        border: 4px solid #444;
+	}	
+#content p img{
+	border: 4px solid #222;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	padding: 0px;
+	}
+#content h1 {
+	color: #888888;
+	font-size: 22px;
+	font-family: Helvetica Bold, Arial Bold, Verdana, Sans-Serif;;
+	font-weight: normal;
+	padding: 10px 10px 10px 10px;
+	line-height: 150%;
+	margin: 0px;
+	}
+	
+#content h1 a  {
+	color: #888888;
+	text-decoration: underline;
+	}
+
+#content h1 a:hover {
+	color: #ffffff;
+	text-decoration: none;
+	}
+
+#content h2 {
+	color: #888888;
+	font-size: 16px;	
+	font-family: Verdana, Helvetica, Arial, Sans-Serif;
+	font-weight: bold;
+	margin: 0px;
+	margin-top: 1em;
+	margin-bottom: 1em;
+	line-height: 120%;
+	font-variant: normal;
+	}
+#content h2 a  {
+	color: #888888;
+	text-decoration: none;
+	}
+
+#content h2 a:hover {
+	color: #ffffff;
+	background: none;
+	text-decoration: underline;
+	}
+
+#content h3 {
+	color: #666666;
+	font-size: 14px;
+	font-family: Verdana, Helvetica, Arial, Sans-Serif;
+	font-weight: bold;
+	margin-bottom: 0px;
+	line-height: 120%;
+	}
+#content h3 a  {
+	color: #666666;
+	text-decoration: none;
+	}
+
+#content h3 a:hover {
+	color: #000000;
+	background: #ffffff;
+	text-decoration: underline;
+	}
+
+#content ol {
+	list-style-type: decimal;
+	line-height: 18px;
+	margin: 0px;
+	padding: 0px 0px 10px 30px;
+	}
+#content ul {
+	list-style: none;
+	margin: 0px;
+	padding: 0px 0px 10px 0px;
+	}
+	
+#content li {
+	margin: 0px;
+	padding: 0px;
+	}
+	
+#content ul li {
+	list-style: square inside;
+	margin: 0px 0px 0px 10px;
+	padding: 5px 0px 0px 0px;
+	}
+#content ul li a {
+	color: #cccccc;
+	text-decoration: underline;
+	}
+
+#content ul li a:hover {
+	color: #ffffff;
+	text-decoration: underline;
+	}
+
+blockquote{
+	margin: 0px 0px 0px 25px;
+	padding: 0px 25px 0px 10px;
+	font-style: italic;
+	color: #666666;
+	border-left: 1px solid #cccccc;
+	}
+	
+#content blockquote p{
+	margin: 0px 0px 20px 0px;
+	padding: 0px;
+	}
+
+.postspace {
+	border-top:  1px solid #444444;
+	/* width: 600px; */
+	height: 3px;
+	/* margin: 20px 0px 20px 0px; */
+	margin-top: 20px;
+	margin-bottom: 20px;
+	padding: 0px;
+	}
+.postspace2 {
+	/* width: 600px; */
+	height: 0px;
+	margin: 0px;
+	padding: 0px;
+	}
+.postspace3 {
+	/* width: 600px; */
+	height: 15px;
+	margin: 0px;
+	padding: 0px;
+	}
+
+#l_sidebar {
+	color: #ffffff;
+	/* width: 190px; */
+	float: left; 
+	float: left; 
+	margin-top: 0px;
+	margin-bottom: 20px;
+	padding: 0px 15px 15px 25px; 
+	}
+#l_sidebar p{
+	margin: 0px;
+	line-height: 16px;
+	padding: 5px 0px 10px 0px;
+	}
+#l_sidebar h2 {
+	color: #888888;
+	font-size: 12px;
+	font-family: Verdana, Helvetica, Arial, Sans-Serif;
+	font-weight: bold;
+	list-style: none;
+	padding: 10px 0px 10px 0px;
+	margin: 0px;
+	}
+
+
+#l_sidebar ul {
+	list-style: none;
+	margin: 0px;
+	padding: 0px 0px 20px 0px;
+	}
+	
+#l_sidebar li {
+	list-style: none;
+	margin: 0px;
+	padding: 0px;
+	}
+	
+#l_sidebar ul li {
+	list-style: none;
+	margin: 0px;
+	padding: 6px 0px 5px 0px;
+	}
+	
+#l_sidebar ul li a {
+	color: #ffffff;
+	text-decoration: none;
+	}
+
+#l_sidebar ul li a:hover {
+	color: #ffffff;
+	text-decoration: underline;
+	}
+
+
+#r_sidebar { 
+	color: #ffffff;
+	/* width: 190px;  */
+	float: right; 
+	position:relative;
+	margin-top: 0px;
+	margin-bottom: 20px;
+	padding: 0px 25px 15px 15px; 
+	}
+#r_sidebar p{
+	margin: 0px;
+	line-height: 16px;
+	padding: 5px 0px 10px 0px;
+	}
+#r_sidebar h2 {
+	color: #888888;
+	font-size: 12px;
+	font-family: Verdana, Helvetica, Arial, Sans-Serif;
+	font-weight: bold;
+	list-style: none;
+	padding: 10px 0px 10px 0px;
+	margin: 10px;
+	}
+
+#r_sidebar ul {
+	list-style: none;
+	margin: 0px;
+	padding: 0px 0px 20px 0px;
+	}
+	
+#r_sidebar li {
+	list-style: none;
+	margin: 0px;
+	padding: 0px;
+	}
+	
+#r_sidebar ul li {
+	list-style: none;
+	margin: 0px;
+	padding: 6px 0px 5px 0px;
+	}
+#r_sidebar ul li a {
+	color: #ffffff;
+	text-decoration: none;
+	}
+
+#r_sidebar ul li a:hover {
+	color: #ffffff;
+	text-decoration: underline;
+	}
+
+#footer { 
+	padding: 10px 0px 20px 0px;
+	text-align: center;
+	clear: both;
+	}

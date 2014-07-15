@@ -1,0 +1,266 @@
+/*	
+  Medusa default style sheet. 
+	By: Dan McGarry
+	Date: April 16, 1999	
+	Updated: June 27, 1999 
+	Again December 2001
+	And again July 2004 to include lists 
+  And again March 2011 to add jQuery-based slideshow support 
+  And again July 2014 to add Mosaic support
+
+*/
+img {
+		opacity: 0.8;
+}
+#container {
+		width: 90%;
+}
+span.item-desc {
+		position: relative;
+		left: 0px;
+		opacity: 0;
+		display: none;
+}
+.item {
+		background: transparent;
+		border: 0;
+		padding: 0;
+		margin: 0;
+		display: inline;
+		border: 0;
+}
+.item200 {
+		width: 200px;
+}
+.item300 {
+		width: 300px;
+}
+.item400 {
+		width: 400px;
+}
+.item500 {
+		width: 500px;
+}
+.item600 {
+		width: 600px;
+}
+.also {
+		display: none;
+}
+.title {
+		border: 0;
+		display: block;
+		opacity: 0.4;
+		color: #fff;
+		font-size: 164pt;
+		font-family: 'helvetica neue',helvetica,arial,sans-serif;
+    z-index: 9999;
+    position: relative;
+    top: 0;
+    text-align: center;
+		padding: 0;
+		margin: 0;
+		background: transparent;
+}
+
+#slideshow {
+      position:relative;
+      height:490px; 
+      width: 700px;
+      border: 10px solid #111111;
+      border-bottom: 40px;
+      margin-left: 100px;
+      background: #111111;
+}
+
+#slideshow DIV {
+      position:absolute;
+      top:0;
+      left:0;
+      z-index:8;
+      opacity:0.0;
+}
+
+#slideshow DIV.active {
+      z-index:10;
+      opacity:1.0;
+}
+
+#slideshow DIV.last-active {
+      z-index:9;
+}
+
+#slideshow DIV.active DIV.caption{
+      height: 20px;
+      position: relative;
+      top: -40px;
+      border: 1px solid #333333;
+      padding: 10px;
+      opacity: 0.6;
+      background: #000000;
+      color: #666666;
+      font-family: arial,helvetica,sans-serif;
+      /* font-weight: bold; */
+      font-size: 10pt;
+      z-index: 11;
+}
+
+#slideshow DIV#next { 
+	position: relative;
+	left: 650px;
+	top: 410px;
+	font-family: arial,helvetica,sans-serif;
+	font-size: 40pt;
+	z-index: 99;
+	opacity: 0.5;
+	background: none;
+	color: #FFF;
+	border: 0;
+ }
+
+#slideshow DIV#next a { 
+	z-index: 99;
+	color: #FFF;
+	background: none;
+	border: none;
+	outline: none;
+ }
+
+#slideshow DIV#next a:hover { 
+	color: #FFF;
+	background: none;
+	border: none;
+	outline: none;
+ }
+
+#slideshow DIV#next a:active { 
+	color: #FFF;
+	background: none;
+	border: none;
+	outline: none;
+ }
+
+
+body
+{
+  color:             #b4b4cd;
+  background-color: #000000;
+  font-family: arial, helvetica, sans-serif;
+  margin-left: 30px;
+}
+
+p
+{
+  color: #b4b4cd;
+  border: 1px solid #c0c0c0;
+  padding-top: 1em;
+  padding-bottom: 1em;
+  padding-left: 1em;
+  padding-right: 1em;
+  background-color: #222222; 
+  font-family: arial,helvetica,sans-serif;
+  margin-left: 3em;
+  margin-right: 3em;
+}
+
+ol
+{
+  color: #b4b4cd;
+  border: 1px solid #c0c0c0;
+  padding-top: 1em;
+  padding-bottom: 1em;
+  padding-left: 3em;
+  padding-right: 1em;
+  background-color: #222222;
+  font-family: arial,helvetica,sans-serif;
+  margin-left: 3em;
+  margin-right: 3em;
+}
+.image 
+{
+  text-align: center;
+  background: #000000;
+  margin-left: 3em;
+  margin-right: 3em;
+}
+
+.name
+{
+  font-weight: bold;
+}
+
+a
+{
+  background:		transparent;
+  color:			#FFFFFF;
+  text-decoration: none;
+  border-color:		#ffffff;
+}
+
+h1 {
+  margin-left: 10px;
+}
+
+small
+{
+  text-align: right;
+  font-variant: small-caps;
+  font-size: 10pt;
+  /* font-weight: lighter; */
+}
+
+h2
+{
+  color: #b4b4cd;
+  background-color: #000000;
+  background-image: none;
+  font-family: verdana,helvetica,sans-serif;
+  font-size: 14pt;
+}
+
+pre 
+{
+  margin-left:100px;
+  font-family: sans-serif;
+}
+.verse
+{
+  margin-left: 210px;
+}
+
+.verse2
+{
+  margin-left: 250px;
+}
+
+.verse3
+{
+  margin-left: 300px;
+}
+
+.verse3a
+{
+  text-indent: -65px;
+  margin-left: 275px;
+}
+
+.spacer
+{
+  line-height: .25em;
+}
+.centerit
+{
+  text-align: center;
+}
+
+#snowflake 
+{
+  margin-left:	150px;
+}
+
+#snowtitle
+{
+  font-family:	arial,helvetica,sans-serif;
+  margin-left:	60px;
+  font-style:	italic;
+}

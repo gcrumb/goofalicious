@@ -192,8 +192,8 @@ sub get_menu {
   my $self = shift;
 
   my %sizes = ('0700'     => "small",
-                 '0900'     => "medium",
-                 '1200'     => "large",);
+							 '0900'     => "medium",
+							 '1200'     => "large",);
 
   my $output;
   my @img_list = ();
@@ -219,7 +219,7 @@ sub get_menu {
 
       if (-r "$dir/$category_file"){
 
-				$output = "<p>$category_file:<br>\n";
+				$output = "<p class='title'>$category_file\n";
 				open CATEGORY, "$dir/$category_file" or
 					die "Couldn't access category '$category_file: $!\n";
 
@@ -257,7 +257,7 @@ sub get_menu {
 
     # Output a menu of sub-categories.
     if (scalar @category_list){
-      my $menu_list = "<p>See also: |";
+      my $menu_list = "<p class='also'>See also: |";
       my $category;
       foreach $category (sort @category_list){
         my $display = $category;
@@ -289,9 +289,12 @@ sub get_menu {
       my $img = $img_list{$img_desc};
       next unless $img;
 
+			my @thumb_sizes = (200,400,300,500);
+			my $random_size = $thumb_sizes[int(rand(scalar(@thumb_sizes)))];
+
       my %attrs = (
 		   file            => "$dir/$img",
-		   max_dimension   => 300,
+		   max_dimension   => $random_size,
 		   suffix          => "size",
 		  );
 
@@ -301,16 +304,16 @@ sub get_menu {
       $thumbnail = $sizer->create() unless $thumbnail;
       my $link = "<a href='$base_url/$img'>";
       my $link_img = "<img src='$base_url/$thumbnail' border='0'>";
-      $output .= "\t<p>$link$link_img</a><br><br>$link$img_desc</a>\n";
+      $output .= "\t<div class='item item$random_size'>$link$link_img</a>\n";
 
-      $output .= "<br>View: \n";
+      $output .= "<span class='item-desc'>$link$img_desc</a><br />View: \n";
       foreach my $size (sort keys %sizes){
         my $desc = $sizes{$size};
         $size =~ s!^0!!;
         $link = "<a href='$base_url/imageview.html?img=$img&img_size=$size'>";
         $output .= "$link$desc</a>&nbsp;";
       }
-      $output .= "</p>";
+      $output .= "</span></div>";
     }
   }
 
@@ -404,7 +407,6 @@ sub make_slideshow {
 
       if (-r "$dir/$category_file"){
 
-				#$output = "<p>$category_file:<br>\n";
 				open CATEGORY, "$dir/$category_file" or
 					die "Couldn't access category '$category_file: $!\n";
 
@@ -442,7 +444,7 @@ sub make_slideshow {
 
     # Output a menu of sub-categories.
     if (scalar @category_list){
-      my $menu_list = "<p>See also: |";
+      my $menu_list = "<p class='also'>See also: |";
       foreach my $category (sort @category_list){
         my $display = $category;
         $display =~ s!^\d{4}\-(\w+)$!$1!;

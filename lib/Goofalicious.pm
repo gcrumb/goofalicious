@@ -1,7 +1,7 @@
 package Goofalicious;
 use strict;
 
-our $VERSION = 0.08;
+our $VERSION = 0.11;
 
 #################### subroutine header begin ####################
 

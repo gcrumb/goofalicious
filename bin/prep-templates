@@ -1,5 +1,8 @@
 #!/usr/bin/perl -w
 
+eval 'exec /usr/bin/perl -w -S $0 ${1+"$@"}'
+    if 0; # not running under some shell
+
 use strict;
 use Image::ExifTool ':Public';
 use File::Basename;
@@ -91,7 +94,7 @@ foreach (sort @jpegs) {
 
   my $duplicate = $website_dir . '/' . basename $jpeg;
 
-  if ($force && -e $duplicate){
+  if ($force == 0 && -e $duplicate){
       warn "File '$duplicate' already exists. Skipping...\n";
       next;
   }
