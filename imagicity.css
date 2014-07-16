@@ -11,9 +11,11 @@
 */
 
 img {
-		opacity: 0.8;
+		opacity: 0.95;
 }
 .img_desc {
+		font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",helvetica,arial,sans-serif;
+		text-align: center;
 		border-radius: 5px;
 		width: 300px;
 }
@@ -33,7 +35,9 @@ span.item-desc {
 		padding: 0;
 		margin: 0;
 		display: inline;
-		border: 0;
+		-webkit-box-shadow: inset 0px 0px 10px 1px rgba(0,0,0,0.75);
+		-moz-box-shadow: inset 0px 0px 10px 1px rgba(0,0,0,0.75);
+		box-shadow: inset 0px 0px 10px 5px rgba(0,0,0,0.75);
 }
 .item200 {
 		width: 200px;
