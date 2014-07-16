@@ -193,7 +193,8 @@ TO_INST_PM = lib/Goofalicious.pm \
 	lib/Goofalicious/ImageView.pm \
 	lib/Goofalicious/ImageView/Organiser.pm \
 	lib/Goofalicious/ImageView/Parser.pm \
-	lib/Goofalicious/ImageView/Sizer.pm
+	lib/Goofalicious/ImageView/Sizer.pm \
+	lib/Goofalicious/ImageView/Sizer.pm.saved
 
 PM_TO_BLIB = lib/Goofalicious/Dreams.pm \
 	blib/lib/Goofalicious/Dreams.pm \
@@ -206,7 +207,9 @@ PM_TO_BLIB = lib/Goofalicious/Dreams.pm \
 	lib/Goofalicious/ImageView/Sizer.pm \
 	blib/lib/Goofalicious/ImageView/Sizer.pm \
 	lib/Goofalicious.pm \
-	blib/lib/Goofalicious.pm
+	blib/lib/Goofalicious.pm \
+	lib/Goofalicious/ImageView/Sizer.pm.saved \
+	blib/lib/Goofalicious/ImageView/Sizer.pm.saved
 
 
 # --- MakeMaker platform_constants section:
@@ -957,7 +960,8 @@ pm_to_blib : $(FIRST_MAKEFILE) $(TO_INST_PM)
 	  lib/Goofalicious/ImageView.pm blib/lib/Goofalicious/ImageView.pm \
 	  lib/Goofalicious/ImageView/Organiser.pm blib/lib/Goofalicious/ImageView/Organiser.pm \
 	  lib/Goofalicious/ImageView/Sizer.pm blib/lib/Goofalicious/ImageView/Sizer.pm \
-	  lib/Goofalicious.pm blib/lib/Goofalicious.pm 
+	  lib/Goofalicious.pm blib/lib/Goofalicious.pm \
+	  lib/Goofalicious/ImageView/Sizer.pm.saved blib/lib/Goofalicious/ImageView/Sizer.pm.saved 
 	$(NOECHO) $(TOUCH) pm_to_blib
 
 

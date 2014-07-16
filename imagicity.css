@@ -9,8 +9,13 @@
   And again July 2014 to add Mosaic support
 
 */
+
 img {
 		opacity: 0.8;
+}
+.img_desc {
+		border-radius: 5px;
+		width: 300px;
 }
 #container {
 		width: 90%;
@@ -18,6 +23,7 @@ img {
 span.item-desc {
 		position: relative;
 		left: 0px;
+		float:left;
 		opacity: 0;
 		display: none;
 }
@@ -45,7 +51,9 @@ span.item-desc {
 		width: 600px;
 }
 .also {
-		display: none;
+		position: absolute;
+		width: 95%;
+		top: -60px;
 }
 .title {
 		border: 0;

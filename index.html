@@ -7,7 +7,7 @@
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 
     <title>Imagicity | Photography - exotica, mundanity and wonders | Graham Crumb, Proprietor</title>
-    
+    <link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.11.0/themes/ui-darkness/jquery-ui.css" />
     <link rel="stylesheet" href="http://imagicity.com/wp-content/themes/rockinblack-3col-1/style.css" type="text/css" media="screen" />
     <link rel="stylesheet" type="text/css" href="/imagicity.css" />
 
@@ -25,6 +25,7 @@
 
 </script>
     <script src="http://code.jquery.com/jquery-1.11.1.min.js" type="text/javascript"></script>
+		<script src="//code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
 		<script src="/masonry.pkgd.js"></script>
 		<script src="/imagesloaded.pkgd.js"></script>
 <script type="text/javascript">
@@ -49,16 +50,70 @@ $(document).ready(function() {
 				}
 		);
 
-/*
-		$('p.item').hover(
-				function() {
-						$(this).children('span.item-desc').fadeTo(150, 1.0);
+		var sizes = [
+				{
+						label: 'small',
+						value: 700
 				},
-				function() {
-						$(this).children('span.item-desc').fadeTo(150, 0);
-				}
-		);
-*/
+				{
+						label: 'medium',
+						value: 900
+				},
+				{
+						label: 'large',
+						value: 1200
+				},
+		];
+
+//		$('div.item').bind( "mouseleave", function( event ) {
+//				event.stopImmediatePropagation();
+//		});
+
+		$( document ).tooltip({
+				items: "div.item",
+				content: function() {
+						var element = $( this ).find('img');
+						var output = '';
+						var desc = element.attr( "alt" );
+						//console.debug("DESC", desc);
+						var img_link = element.attr( "src" );
+						//console.debug("LINK", img_link);
+						for (var i = 0; i < sizes.length; i++){
+								var this_image = img_link;
+								var size_link = this_image.replace(/_\d{3}/, '_' + sizes[i].value );
+								output += ' <a href="' + size_link + '">' + sizes[i].label + '</a> |'; 
+						}
+						output += ' <a href="' + this_image.replace(/_\d{3}/, '') + '">full</a>'; 
+						return '<div class="img_desc">' + desc + '<br />' + output + '</div>';
+				},
+				show: {
+						effect: "slideDown",
+						delay: 150
+				},
+				track: false,
+        position: {
+            my: "center bottom-10%",
+            at: "center bottom"
+        },
+				open: function (event, ui) {
+						// When opening a new div, remove any previously opened tooltips first.
+						$(".ui-tooltip:not([id=" + ui.tooltip[0].id + "])").remove();
+						$('.item').removeAttr('aria-describedby');
+						$('.ui-helper-hidden-accessible').find(':not(:visible)').remove();
+				},
+				close: function( event, ui ) {
+						ui.tooltip.hover(
+								function () {
+										$(this).stop(true).fadeTo(400, 1); 
+										//.fadeIn("slow"); // doesn't work because of stop()
+								},
+								function () {
+										$(this).fadeOut("400", function(){ $(this).remove(); })
+								}
+						);
+				}    
+		});
+
 		$('DIV#slideshow').hover(function (){
 				$(this).css('opacity', '0.9');
 				$('#slideshow DIV#next').fadeIn();

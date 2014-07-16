@@ -289,7 +289,7 @@ sub get_menu {
       my $img = $img_list{$img_desc};
       next unless $img;
 
-			my @thumb_sizes = (200,400,300,500);
+			my @thumb_sizes = (200,250,300,350,400,450,500);
 			my $random_size = $thumb_sizes[int(rand(scalar(@thumb_sizes)))];
 
       my %attrs = (
@@ -303,7 +303,7 @@ sub get_menu {
       my $thumbnail = $sizer->{file_exists};
       $thumbnail = $sizer->create() unless $thumbnail;
       my $link = "<a href='$base_url/$img'>";
-      my $link_img = "<img src='$base_url/$thumbnail' border='0'>";
+      my $link_img = "<img tooltip='$base_url/$img' alt='$img_desc' class='ui-corner-all' src='$base_url/$thumbnail' border='0'>";
       $output .= "\t<div class='item item$random_size'>$link$link_img</a>\n";
 
       $output .= "<span class='item-desc'>$link$img_desc</a><br />View: \n";
