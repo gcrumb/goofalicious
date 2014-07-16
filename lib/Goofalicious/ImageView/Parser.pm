@@ -213,47 +213,28 @@ sub get_menu {
 
     my $dir = $self->{parse_params}->{path};
 
-    if ($self->{parse_params}->{category}){
+		my $category_file = $self->{parse_params}->{category} || 'random';
 
-      my $category_file = $self->{parse_params}->{category};
+		if (-r "$dir/$category_file"){
 
-      if (-r "$dir/$category_file"){
-
-				$output = "<p class='title'>$category_file\n";
-				open CATEGORY, "$dir/$category_file" or
-					die "Couldn't access category '$category_file: $!\n";
-
-				# Updated to allow category files to contain sub-categories
-				while (<CATEGORY>){
-					my $entry = $_;
-					chomp $entry;
+			$output = "<p class='title'>$category_file\n";
+			open CATEGORY, "$dir/$category_file" or
+				die "Couldn't access category '$category_file: $!\n";
+			
+			# Updated to allow category files to contain sub-categories
+			while (<CATEGORY>){
+				my $entry = $_;
+				chomp $entry;
 					
-					if ($entry !~ /jpg$/i && -f "$dir/$entry"){
-						push @category_list, $entry;
-					}
-					else {
-						push @img_list, $entry;
-					}
+				if ($entry !~ /jpg$/i && -f "$dir/$entry"){
+					push @category_list, $entry;
 				}
-				close CATEGORY;
-      }
-    }
-    else {
-
-      $output = "<p>Available images:<br>\n";
-      opendir IMG_DIR, $dir or die "Couldn't read dir '$dir': $!\n";
-      my @tmp_list = grep { /nfo$/i && -f "$dir/$_" } readdir IMG_DIR;
-      closedir IMG_DIR;
-
-      # Make sure we don't have any orphaned nfo files
-      # hanging about
-      foreach (@tmp_list){
-        my $test_name = $_;
-        $test_name = s/nfo$/jpg/;
-        push (@img_list, $_) unless -f "$dir/$test_name";
-      }
-
-    }
+				else {
+					push @img_list, $entry;
+				}
+			}
+			close CATEGORY;
+		}
 
     # Output a menu of sub-categories.
     if (scalar @category_list){
@@ -304,7 +285,7 @@ sub get_menu {
       $thumbnail = $sizer->create() unless $thumbnail;
       my $link = "<a href='$base_url/$img'>";
       my $link_img = "<img tooltip='$base_url/$img' alt='$img_desc' class='ui-corner-all' src='$base_url/$thumbnail' border='0'>";
-      $output .= "\t<div class='item item$random_size'>$link$link_img</a>\n";
+      $output .= "\t<div class='item item$random_size'>$link_img\n";
 
       $output .= "<span class='item-desc'>$link$img_desc</a><br />View: \n";
       foreach my $size (sort keys %sizes){
