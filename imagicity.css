@@ -30,29 +30,80 @@ span.item-desc {
 		display: none;
 }
 .item {
+		-webkit-box-shadow: inset 0px 0px 10px 1px rgba(0,0,0,0.75);
+		-moz-box-shadow: inset 0px 0px 10px 1px rgba(0,0,0,0.75);
+		box-shadow: inset 0px 0px 10px 5px rgba(0,0,0,0.75);
 		background: transparent;
-		border: 0;
-		padding: 0;
+		border-radius: 6px;
+		padding: 0.25em;
 		margin: 0;
 		display: inline;
+}
+
+/* 200,250,300,350,400,450,500 */
+
+.item200 {
+		width: 133px;
+		height: 133px;
+		overflow: hidden;
+		border-radius: 6px;
 		-webkit-box-shadow: inset 0px 0px 10px 1px rgba(0,0,0,0.75);
 		-moz-box-shadow: inset 0px 0px 10px 1px rgba(0,0,0,0.75);
 		box-shadow: inset 0px 0px 10px 5px rgba(0,0,0,0.75);
 }
-.item200 {
-		width: 200px;
+.item250 {
+		width: 166px;
+		height: 166px;
+		overflow: hidden;
+		border-radius: 6px;
+		-webkit-box-shadow: inset 0px 0px 10px 1px rgba(0,0,0,0.75);
+		-moz-box-shadow: inset 0px 0px 10px 1px rgba(0,0,0,0.75);
+		box-shadow: inset 0px 0px 10px 5px rgba(0,0,0,0.75);
 }
 .item300 {
-		width: 300px;
+		width: 200px;
+		height: 200px;
+		overflow: hidden;
+		border-radius: 6px;
+		-webkit-box-shadow: inset 0px 0px 10px 1px rgba(0,0,0,0.75);
+		-moz-box-shadow: inset 0px 0px 10px 1px rgba(0,0,0,0.75);
+		box-shadow: inset 0px 0px 10px 5px rgba(0,0,0,0.75);
+}
+.item350 {
+		width: 233px;
+		height: 233px;
+		overflow: hidden;
+		border-radius: 6px;
+		-webkit-box-shadow: inset 0px 0px 10px 1px rgba(0,0,0,0.75);
+		-moz-box-shadow: inset 0px 0px 10px 1px rgba(0,0,0,0.75);
+		box-shadow: inset 0px 0px 10px 5px rgba(0,0,0,0.75);
 }
 .item400 {
-		width: 400px;
+		width: 266px;
+		height: 266px;
+		overflow: hidden;
+		border-radius: 6px;
+		-webkit-box-shadow: inset 0px 0px 10px 1px rgba(0,0,0,0.75);
+		-moz-box-shadow: inset 0px 0px 10px 1px rgba(0,0,0,0.75);
+		box-shadow: inset 0px 0px 10px 5px rgba(0,0,0,0.75);
+}
+.item450 {
+		width: 300px;
+		height: 300px;
+		overflow: hidden;
+		border-radius: 6px;
+		-webkit-box-shadow: inset 0px 0px 10px 1px rgba(0,0,0,0.75);
+		-moz-box-shadow: inset 0px 0px 10px 1px rgba(0,0,0,0.75);
+		box-shadow: inset 0px 0px 10px 5px rgba(0,0,0,0.75);
 }
 .item500 {
-		width: 500px;
-}
-.item600 {
-		width: 600px;
+		width: 333px;
+		height: 333px;
+		overflow: hidden;
+		border-radius: 6px;
+		-webkit-box-shadow: inset 0px 0px 10px 1px rgba(0,0,0,0.75);
+		-moz-box-shadow: inset 0px 0px 10px 1px rgba(0,0,0,0.75);
+		box-shadow: inset 0px 0px 10px 5px rgba(0,0,0,0.75);
 }
 .also {
 		position: absolute;

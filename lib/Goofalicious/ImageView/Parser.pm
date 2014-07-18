@@ -284,7 +284,7 @@ sub get_menu {
       my $thumbnail = $sizer->{file_exists};
       $thumbnail = $sizer->create() unless $thumbnail;
       my $link = "<a href='$base_url/$img'>";
-      my $link_img = "<img tooltip='$base_url/$img' alt='$img_desc' class='ui-corner-all' src='$base_url/$thumbnail' border='0'>";
+      my $link_img = "<img tooltip='$base_url/$img' alt='$img_desc' src='$base_url/$thumbnail' border='0'>";
       $output .= "\t<div class='item item$random_size'>$link_img\n";
 
       $output .= "<span class='item-desc'>$link$img_desc</a><br />View: \n";

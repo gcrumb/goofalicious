@@ -36,11 +36,26 @@ var running = true;
 $(document).ready(function() {
 
 		$('#mosaic').masonry({
-				columnWidth: 20,
+				columnWidth: 50,
 				gutter: 5,
 				itemSelector: '.item'
+		}).imagesLoaded(function() {
+				$('#mosaic').masonry('reload');
+				$('.item').css({'box-shadow': 'inset 0px 0px 10px 5px rgba(0,0,0,0.75)'});
 		});
 
+/*
+		var $container = $('#mosaic');
+		// initialize Masonry after all images have loaded  
+		$container.imagesLoaded( function() {
+				console.debug("gogo go gadget masonry");
+				$container.masonry({
+						columnWidth: 50,
+						gutter: 5,
+						itemSelector: '.item'
+				});
+		});
+*/
 		$('img').hover(
 				function(){
 						$(this).fadeTo(250, 1.0);
@@ -81,9 +96,10 @@ $(document).ready(function() {
 						for (var i = 0; i < sizes.length; i++){
 								var this_image = img_link;
 								var size_link = this_image.replace(/_\d{3}/, '_' + sizes[i].value );
-								output += ' <a href="' + size_link + '">' + sizes[i].label + '</a> |'; 
+								output += ' <a target="_blank" href="' + size_link + '">' + sizes[i].label + '</a> |'; 
 						}
-						output += ' <a href="' + this_image.replace(/_\d{3}/, '') + '">full</a>'; 
+						output += ' <a target="_blank" href="' + this_image.replace(/_\d{3}/, '') + '">full</a>'; 
+						console.debug(output);
 						return '<div class="img_desc">' + desc + '<br />' + output + '</div>';
 				},
 				show: {
