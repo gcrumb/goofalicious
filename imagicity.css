@@ -42,11 +42,11 @@ span.item-desc {
 
 /* 200,250,300,350,400,450,500 */
 
-.item200 {
+.item.item200 {
 		width: 133px;
 		height: 133px;
 		overflow: hidden;
-		border-radius: 6px;
+		border-radius: 6px !important; 
 		-webkit-box-shadow: inset 0px 0px 10px 1px rgba(0,0,0,0.75);
 		-moz-box-shadow: inset 0px 0px 10px 1px rgba(0,0,0,0.75);
 		box-shadow: inset 0px 0px 10px 5px rgba(0,0,0,0.75);

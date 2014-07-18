@@ -270,7 +270,8 @@ sub get_menu {
       my $img = $img_list{$img_desc};
       next unless $img;
 
-			my @thumb_sizes = (200,250,300,350,400,450,500);
+#			my @thumb_sizes = (200,250,300,350,400,450,500);
+			my @thumb_sizes = (250,500);
 			my $random_size = $thumb_sizes[int(rand(scalar(@thumb_sizes)))];
 
       my %attrs = (
