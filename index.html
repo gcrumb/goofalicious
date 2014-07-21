@@ -35,27 +35,16 @@ var running = true;
 
 $(document).ready(function() {
 
+		$('p.title').hover(function(){console.debug('POOF!'); $(this).fadeOut(200).delay(1500).fadeIn(300);}, function (){});
+
 		$('#mosaic').masonry({
 				columnWidth: 166,
 				gutter: 5,
 				itemSelector: '.item'
 		}).imagesLoaded(function() {
-				$('#mosaic').masonry('reload');
-				$('.item').css({'box-shadow': 'inset 0px 0px 10px 5px rgba(0,0,0,0.75)'});
+				$('#mosaic').masonry();
 		});
 
-/*
-		var $container = $('#mosaic');
-		// initialize Masonry after all images have loaded  
-		$container.imagesLoaded( function() {
-				console.debug("gogo go gadget masonry");
-				$container.masonry({
-						columnWidth: 50,
-						gutter: 5,
-						itemSelector: '.item'
-				});
-		});
-*/
 		$('img').hover(
 				function(){
 						$(this).fadeTo(250, 1.0);
@@ -79,10 +68,6 @@ $(document).ready(function() {
 						value: 1200
 				},
 		];
-
-//		$('div.item').bind( "mouseleave", function( event ) {
-//				event.stopImmediatePropagation();
-//		});
 
 		$( document ).tooltip({
 				items: "div.item",
