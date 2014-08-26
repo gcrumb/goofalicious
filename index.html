@@ -74,14 +74,16 @@ $(document).ready(function() {
 				content: function() {
 						var element = $( this ).find('img');
 						var output = '';
+						var file_url = '/imageview.html?img=';
 						var desc = element.attr( "alt" );
 						//console.debug("DESC", desc);
 						var img_link = element.attr( "src" );
 						//console.debug("LINK", img_link);
 						for (var i = 0; i < sizes.length; i++){
 								var this_image = img_link;
-								var size_link = this_image.replace(/_\d{3}/, '_' + sizes[i].value );
-								output += ' <a target="_blank" href="' + size_link + '">' + sizes[i].label + '</a> |'; 
+								var size_link = this_image.replace(/_\d{3}/, '');
+								size_link = size_link.replace('http://gallery.imagicity.com/','');
+								output += ' <a target="_blank" href="' + file_url + size_link + '&img_size=' + sizes[i].value + '">' + sizes[i].label + '</a> |'; 
 						}
 						output += ' <a target="_blank" href="' + this_image.replace(/_\d{3}/, '') + '">full</a>'; 
 						console.debug(output);

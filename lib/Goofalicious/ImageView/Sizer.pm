@@ -155,7 +155,8 @@ sub create {
 
   my ($thumb,$x,$y) = Image::Magick::Thumbnail::create($sizer, $self->{max_dimension});
 
-  $thumb->Write($new_img_name);
+	warn "Couldn't write file '$new_img_name'\n" unless defined $thumb;
+  $thumb->Write($new_img_name) if defined $thumb;
 
   return $self->{img_name};
 
