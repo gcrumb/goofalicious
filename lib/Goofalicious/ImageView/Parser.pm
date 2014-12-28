@@ -5,6 +5,7 @@
 package Goofalicious::ImageView::Parser;
 use base HTML::Parser;
 use Goofalicious::ImageView::Sizer;
+use File::Slurp;
 
 use strict;
 
@@ -255,49 +256,91 @@ sub get_menu {
       $output .= $menu_list;
     }
 
-    # Sort by description, not by filename
+    # Sort by description, group by title
     my %img_list = ();
+		my $current_set = '';
 
     foreach my $img (@img_list){
 
       $img =~ s/nfo$/jpg/ if $img =~ /nfo$/;
-      $img_list{$self->get_img_desc($dir, $img)} = $img;
+			
+ #     $img_list{$self->get_img_desc($dir, $img)} = $img;
+
+			my ($img, $img_data) = $self->get_img_desc($dir, $img);
+
+			unless (defined $img_data && ref($img_data) eq 'REF'){
+				$img_list{$img} = [
+													 {
+														filename => $img,
+														title    => $img,
+														desc     => 'No Description',
+														seq      => 0,
+														month    => '',
+														year     => '',
+													 }
+													];
+				next;
+			}
+
+			my $set = $img_data->{name};
+			$set =~ s!\d+!!g;
+
+			my $working_set = exists $img_list{$set} ? $img_list{$set} : [];
+			push @$working_set, $img_data;
+			$img_list{$set} = $working_set;
 
     }
 
-    foreach my $img_desc (sort keys %img_list){
+		my $first = 1;
 
-      my $img = $img_list{$img_desc};
-      next unless $img;
+    foreach my $img_set (sort keys %img_list){
+ 
+			if ($first){
+				$output .= "<div class='set' id='$img_set'>";
+				$first = 0;
+			}
+			else {
+				$output .= "</div>";
+				$output .= "<div class='set' id='$img_set'>";
+			}
 
-#			my @thumb_sizes = (200,250,300,350,400,450,500);
-			my @thumb_sizes = (250,500);
-			my $random_size = $thumb_sizes[int(rand(scalar(@thumb_sizes)))];
+			my $this_set = $img_list{$img_set};
 
-      my %attrs = (
-		   file            => "$dir/$img",
-		   max_dimension   => $random_size,
-		   suffix          => "size",
-		  );
+			$output .= "<div class='set-title'>";
+			$output .= $this_set[0]->{desc};
+			$output .= "</div>';
 
-      $sizer->init(%attrs);
+			foreach my $img (@$this_set){
 
-      my $thumbnail = $sizer->{file_exists};
-      $thumbnail = $sizer->create() unless $thumbnail;
-      my $link = "<a href='$base_url/$img'>";
-      my $link_img = "<img tooltip='$base_url/$img' alt='$img_desc' src='$base_url/$thumbnail' border='0'>";
-      $output .= "\t<div class='item item$random_size'>$link_img\n";
+				next unless $img;
 
-      $output .= "<span class='item-desc'>$link$img_desc</a><br />View: \n";
-      foreach my $size (sort keys %sizes){
-        my $desc = $sizes{$size};
-        $size =~ s!^0!!;
-        $link = "<a href='$base_url/imageview.html?img=$img&img_size=$size'>";
-        $output .= "$link$desc</a>&nbsp;";
-      }
-      $output .= "</span></div>";
-    }
-  }
+				my @thumb_sizes = (300,600,1200);
+				my $random_size = $thumb_sizes[int(rand(scalar(@thumb_sizes)))];
+
+				my %attrs = (
+										 file            => "$dir/$img",
+										 max_dimension   => $random_size,
+										 suffix          => "size",
+										);
+
+				$sizer->init(%attrs);
+				
+				my $thumbnail = $sizer->{file_exists};
+				$thumbnail = $sizer->create() unless $thumbnail;
+				my $link = "<a href='$base_url/$img'>";
+				my $link_img = "<img tooltip='$base_url/$img' alt='$img_desc' src='$base_url/$thumbnail' border='0'>";
+				$output .= "\t<div class='item item$random_size'>$link_img\n";
+
+				$output .= "<span class='item-desc'>$link$img_desc</a><br />View: \n";
+				foreach my $size (sort keys %sizes){
+					my $desc = $sizes{$size};
+					$size =~ s!^0!!;
+					$link = "<a href='$base_url/imageview.html?img=$img&img_size=$size'>";
+					$output .= "$link$desc</a>&nbsp;";
+				}
+				$output .= "</span></div>";
+			}
+		}
 
   return $output;
 
@@ -307,27 +350,66 @@ sub get_img_desc {
 
   my ($self, $dir, $img) = @_;
 
+	my @months = qw(
+								January
+								February
+								March
+								April
+								May
+								June
+								July
+								August
+								September
+								October
+								November
+								December
+							 );
+
   my $img_desc = "";
   my $img_desc_file = "";
+	my $image_data = {};
 
   my $img_file = "$dir/$img";
   return undef unless (defined $img_file && -r $img_file);
 
   ($img_desc_file = $img_file) =~ s/jpg$/nfo/i;
 
-  return $img unless -r $img_desc_file;
+  return wantarray ? ($img) : $img unless -r $img_desc_file;
 
-  open IN, $img_desc_file or die "Couldn't open file '$img_desc_file': $!\n";
+	$image_data->{filename} = $img_file;
 
-  while (<IN>){
-    if (/^<p class='name'>(.*?)<\/p>/i){
-      close IN;
-      return $1;
-    }
-  }
+	my @lines = read_file($img_desc_file) || ();
+	my $img_desc = '';
 
-  close IN;
-  return $img;
+	foreach my $line (@lines){
+		if ($line =~ /^<p class='name'>(.*?)<\/p>/i){
+			$image_data->{name} = $1;
+			next;
+		}
+		foreach my $this_month (@months){
+			if ($line =~ /^<p>$this_month, (\d\d\d\d)<\/p>/i){
+				$image_data->{month} = this_month;
+				$image_data->{year}  = $2;
+			}
+			if (exists $image_data->{month}){
+				next;
+			}
+		}
+		$image_data->{description} .= $line
+	}
+	# open IN, $img_desc_file or die "Couldn't open file '$img_desc_file': $!\n";
+
+  # while (<IN>){
+  #   if (/^<p class='name'>(.*?)<\/p>/i){
+  #     close IN;
+  #     return $1;
+  #   }
+  # }
+
+  # close IN;
+
+	# Backward compatibility
+  return wantarray ? ($img, $image_data) : $img;
 
 }
 
