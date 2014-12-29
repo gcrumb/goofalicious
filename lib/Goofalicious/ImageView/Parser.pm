@@ -7,6 +7,7 @@ use base HTML::Parser;
 use Goofalicious::ImageView::Sizer;
 use File::Slurp;
 use Data::Dumper;
+use HTML::Entities;
 
 use strict;
 
@@ -295,8 +296,8 @@ sub get_menu {
 			$set_data    .= "</div>";
 
 			my $filename  = $img->{filename};
-			my $img_desc  = $img->{desc};
-			my $img_title = $img->{title};
+			my $img_desc  = encode_entities($img->{desc});
+			my $img_title = encode_entities($img->{title});
 			
 			my @thumb_sizes = (300,600);
 			my $random_size = $thumb_sizes[int(rand(scalar(@thumb_sizes)))];

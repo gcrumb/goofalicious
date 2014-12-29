@@ -27,6 +27,7 @@ WriteMakefile(
 										 'Apache2::RequestUtil' => 0.0,
 										 'File::Basename'       => 0.0,
 										 'File::Slurp'          => 0.0,
+										 'HTML::Entities'       => 0.0,
                     },
 		 EXE_FILES  => [
 										'bin/add-thumbnail-to-summaries.pl',
