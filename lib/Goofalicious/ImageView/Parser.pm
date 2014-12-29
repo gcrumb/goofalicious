@@ -6,6 +6,7 @@ package Goofalicious::ImageView::Parser;
 use base HTML::Parser;
 use Goofalicious::ImageView::Sizer;
 use File::Slurp;
+use Data::Dumper;
 
 use strict;
 
@@ -209,146 +210,166 @@ sub get_menu {
   }
 
   my $sizer = new Goofalicious::ImageView::Sizer;
+	my $dir   = '';
 
   if ($self->{parse_params}->{path} && -d $self->{parse_params}->{path}){
+		$dir = $self->{parse_params}->{path} . '/';
+	}
 
-    my $dir = $self->{parse_params}->{path};
+	my $category_file = $self->{parse_params}->{category} || 'random';
 
-		my $category_file = $self->{parse_params}->{category} || 'random';
+	if (-r "$dir$category_file"){
 
-		if (-r "$dir/$category_file"){
-
-			$output = "<p class='title'>$category_file\n";
-			open CATEGORY, "$dir/$category_file" or
-				die "Couldn't access category '$category_file: $!\n";
+		$output = "<p class='title'>$category_file\n";
+		open CATEGORY, "$dir/$category_file" or
+			die "Couldn't access category '$category_file: $!\n";
 			
-			# Updated to allow category files to contain sub-categories
-			while (<CATEGORY>){
-				my $entry = $_;
-				chomp $entry;
-					
-				if ($entry !~ /jpg$/i && -f "$dir/$entry"){
-					push @category_list, $entry;
-				}
-				else {
-					push @img_list, $entry;
-				}
-			}
-			close CATEGORY;
-		}
-
-    # Output a menu of sub-categories.
-    if (scalar @category_list){
-      my $menu_list = "<p class='also'>See also: |";
-      my $category;
-      foreach $category (sort @category_list){
-        my $display = $category;
-        $display =~ s!^\d{4}\-(\w+)$!$1!;
-        $menu_list .= "| <a href='$base_url/imageview.html?category=$category'>$display</a> |";
-      }
-
-      $category = $self->{parse_params}->{category};
-      $menu_list .= "|";
-      $menu_list .= "\&nbsp;\&nbsp; ";
-      $menu_list .= "<strong><a href='$base_url/imageview.html?category=$category&slide_show=1'>";
-      $menu_list .= "view slideshow</a></strong></p>";
-
-      $output .= $menu_list;
-    }
-
-    # Sort by description, group by title
-    my %img_list = ();
-		my $current_set = '';
-
-    foreach my $img (@img_list){
-
-      $img =~ s/nfo$/jpg/ if $img =~ /nfo$/;
+		# Updated to allow category files to contain sub-categories
+		while (<CATEGORY>){
+			my $entry = $_;
+			chomp $entry;
 			
- #     $img_list{$self->get_img_desc($dir, $img)} = $img;
-
-			my ($img, $img_data) = $self->get_img_desc($dir, $img);
-
-			unless (defined $img_data && ref($img_data) eq 'REF'){
-				$img_list{$img} = [
-													 {
-														filename => $img,
-														title    => $img,
-														desc     => 'No Description',
-														seq      => 0,
-														month    => '',
-														year     => '',
-													 }
-													];
-				next;
-			}
-
-			my $set = $img_data->{name};
-			$set =~ s!\d+!!g;
-
-			my $working_set = exists $img_list{$set} ? $img_list{$set} : [];
-			push @$working_set, $img_data;
-			$img_list{$set} = $working_set;
-
-    }
-
-		my $first = 1;
-
-    foreach my $img_set (sort keys %img_list){
- 
-			if ($first){
-				$output .= "<div class='set' id='$img_set'>";
-				$first = 0;
+			if ($entry !~ /jpg$/i && -f "$dir/$entry"){
+				push @category_list, $entry;
 			}
 			else {
-				$output .= "</div>";
-				$output .= "<div class='set' id='$img_set'>";
-			}
-
-			my $this_set = $img_list{$img_set};
-
-			$output .= "<div class='set-title'>";
-			$output .= $this_set[0]->{desc};
-			$output .= "</div>';
-
-			foreach my $img (@$this_set){
-
-				next unless $img;
-
-				my @thumb_sizes = (300,600,1200);
-				my $random_size = $thumb_sizes[int(rand(scalar(@thumb_sizes)))];
-
-				my %attrs = (
-										 file            => "$dir/$img",
-										 max_dimension   => $random_size,
-										 suffix          => "size",
-										);
-
-				$sizer->init(%attrs);
-				
-				my $thumbnail = $sizer->{file_exists};
-				$thumbnail = $sizer->create() unless $thumbnail;
-				my $link = "<a href='$base_url/$img'>";
-				my $link_img = "<img tooltip='$base_url/$img' alt='$img_desc' src='$base_url/$thumbnail' border='0'>";
-				$output .= "\t<div class='item item$random_size'>$link_img\n";
-
-				$output .= "<span class='item-desc'>$link$img_desc</a><br />View: \n";
-				foreach my $size (sort keys %sizes){
-					my $desc = $sizes{$size};
-					$size =~ s!^0!!;
-					$link = "<a href='$base_url/imageview.html?img=$img&img_size=$size'>";
-					$output .= "$link$desc</a>&nbsp;";
-				}
-				$output .= "</span></div>";
+				push @img_list, $entry;
 			}
 		}
+		close CATEGORY;
+	}
 
-  return $output;
+	# Output a menu of sub-categories.
+	if (scalar @category_list){
+		my $menu_list = "<p class='also'>See also: |";
 
+		foreach my $this_category (sort @category_list){
+			my $display = $this_category;
+			$display =~ s!^\d{4}\-(\w+)$!$1!;
+			$menu_list .= "| <a href='$base_url/imageview.html?category=$this_category'>$display</a> |";
+		}
+
+		my $category = $self->{parse_params}->{category};
+		$menu_list .= "|";
+		$menu_list .= "\&nbsp;\&nbsp; ";
+		$menu_list .= "<strong><a href='$base_url/imageview.html?category=$category&slide_show=1'>";
+		$menu_list .= "view slideshow</a></strong></p>";
+		
+		$output .= $menu_list;
+	}
+
+	# Sort by description, group by title
+	my %img_list = ();
+	my $current_set = '';
+
+	foreach my $img (@img_list){
+
+		$img =~ s/nfo$/jpg/ if $img =~ /nfo$/;
+			
+		#     $img_list{$self->get_img_desc($dir, $img)} = $img;
+
+		my $img_data = $self->get_img_desc($dir, $img);
+
+		my $set = $img_data->{title};
+		$set =~ s!\d+!!g;
+		
+		my $working_set = exists $img_list{$set} ? $img_list{$set} : [];
+		$img_data->{seq} = scalar @$working_set;
+		push @$working_set, $img_data;
+		$img_list{$set} = $working_set;
+		
+	}
+
+	foreach my $img_set (sort keys %img_list){
+		
+		$output .= "<div class='set' id='$img_set'>";
+		
+		my $this_set = $img_list{$img_set};
+		
+		foreach my $img (@$this_set){
+			
+			my $set_data  = "<div><div class='set-title'>$img_set</div>";
+			$set_data    .= "<div class='set-description'>";
+			$set_data    .= $img->{desc};
+			$set_data    .= "<div class='image-date'>" . $img->{month} . ', ' . $img->{year} . "</div>";
+			$set_data    .= "</div>";
+
+			my $filename  = $img->{filename};
+			my $img_desc  = $img->{desc};
+			my $img_title = $img->{title};
+			
+			my @thumb_sizes = (300,600);
+			my $random_size = $thumb_sizes[int(rand(scalar(@thumb_sizes)))];
+			
+			my %attrs = (
+									 file            => "$dir/$filename",
+									 max_dimension   => $random_size,
+									 suffix          => "size",
+									);
+			
+			$sizer->init(%attrs);
+			
+			my $thumbnail = $sizer->{file_exists};
+			$thumbnail = $sizer->create() unless $thumbnail;
+			my $link = "<a href='$base_url/$filename'>";
+			my $link_img = "<img tooltip='$base_url/$filename' alt='$img_desc' desc='$img_title' src='$base_url/$thumbnail' />";
+			$output .= "\t<div class='item item$random_size'>$link_img\n";
+			
+			$output .= "<span class='item-desc'>$link$img_desc</a><br />View: \n";
+			foreach my $size (sort keys %sizes){
+				my $desc = $sizes{$size};
+				$size =~ s!^0!!;
+				$link = "<a href='$base_url/imageview.html?img=$filename&img_size=$size'>";
+				$output .= "$link$desc</a>&nbsp;";
+			}
+			$output .= "</span></div>";
+		}
+		$output .= "</div>";
+	}
+
+	return $output;
+	
 }
 
 sub get_img_desc {
 
   my ($self, $dir, $img) = @_;
+
+  my $img_desc = "";
+  my $img_desc_file = "";
+	my $image_data = {};
+
+  my $img_file = "$dir/$img";
+  return undef unless (defined $img_file && -r $img_file);
+
+  ($img_desc_file = $img_file) =~ s/jpg$/nfo/i;
+
+  #return wantarray ? ($img) : $img unless -r $img_desc_file;
+
+	$image_data->{filename} = $img;
+	my $lines = read_file($img_desc_file, array_ref => 1 ) || ();
+	$image_data->{num_lines} = scalar @$lines;
+	$image_data->{raw} = $lines;
+
+	($image_data->{month}, $image_data->{year}) = get_image_date($lines);
+
+	foreach my $line (@$lines){
+		if ($line =~ /^<p class='name'>(.*?)<\/p>/i){
+			$image_data->{title} = $1;
+			next;
+		}
+		if ($line !~ /^</){
+			$image_data->{desc} .= $line;
+		}
+	}
+
+	return $image_data;
+}
+
+sub get_image_date {
+
+	my $lines = shift or return ();
+	my ($month, $year);
 
 	my @months = qw(
 								January
@@ -365,52 +386,18 @@ sub get_img_desc {
 								December
 							 );
 
-  my $img_desc = "";
-  my $img_desc_file = "";
-	my $image_data = {};
-
-  my $img_file = "$dir/$img";
-  return undef unless (defined $img_file && -r $img_file);
-
-  ($img_desc_file = $img_file) =~ s/jpg$/nfo/i;
-
-  return wantarray ? ($img) : $img unless -r $img_desc_file;
-
-	$image_data->{filename} = $img_file;
-
-	my @lines = read_file($img_desc_file) || ();
-	my $img_desc = '';
-
-	foreach my $line (@lines){
-		if ($line =~ /^<p class='name'>(.*?)<\/p>/i){
-			$image_data->{name} = $1;
-			next;
-		}
+	foreach my $line (@$lines){
 		foreach my $this_month (@months){
 			if ($line =~ /^<p>$this_month, (\d\d\d\d)<\/p>/i){
-				$image_data->{month} = this_month;
-				$image_data->{year}  = $2;
+				$month = $this_month;
+				$year  = $1;
 			}
-			if (exists $image_data->{month}){
-				next;
+			if ($month){
+				return ($month, $year);
 			}
 		}
-		$image_data->{description} .= $line
 	}
-	# open IN, $img_desc_file or die "Couldn't open file '$img_desc_file': $!\n";
-
-  # while (<IN>){
-  #   if (/^<p class='name'>(.*?)<\/p>/i){
-  #     close IN;
-  #     return $1;
-  #   }
-  # }
-
-  # close IN;
-
-	# Backward compatibility
-  return wantarray ? ($img, $image_data) : $img;
-
+	return ();
 }
 
 sub get_meta {
