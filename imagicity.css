@@ -25,14 +25,16 @@ img {
 .img_title {
 		font-size: 12pt;
 		font-weight: 400;
-/*
-		font-family: 'Yanone Kaffeesatz', sans-serif;
-*/
 		font-family: helvetica,sans-serif;
 		text-align: center;
 		border-radius: 5px;
 		width: 300px;
 		margin-bottom: 1em;
+}
+
+#swipebox-title {
+		font-size: 2em;
+		text-shadow: rgba(255, 255, 255, 0.25) -1px -1px 0px, rgba(0, 0, 0, 0.25) 1px 1px 0px;
 }
 
 #container {
@@ -127,8 +129,8 @@ span.item-desc {
 		overflow: hidden;
 }
 .item1200 {
-		width: 800px;
-		height: 800px;
+		width: 809px;
+		height: 809px;
 		overflow: hidden;
 }
 .also {
@@ -144,7 +146,7 @@ span.item-desc {
 		text-transform: uppercase;
 		border: 0;
 		display: block;
-		color: rgba(255,255,255,0.25);
+		color: rgba(255,255,255,0.2);
     z-index: 9999;
     position: relative;
     top: 0;
@@ -152,7 +154,7 @@ span.item-desc {
 		padding: 0;
 		margin: 0;
 		background: transparent;
-		text-shadow: rgba(255, 255, 255, 0.25) -1px -1px 1px, rgba(0, 0, 0, 0.25) 1px 1px 1px;
+		text-shadow: rgba(255, 255, 255, 0.25) -1px -1px 0px, rgba(0, 0, 0, 0.25) 1px 1px 0px;
 }
 
 #slideshow {

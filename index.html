@@ -12,11 +12,14 @@
     <link href='http://fonts.googleapis.com/css?family=Oswald:400,300' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="http://imagicity.com/wp-content/themes/rockinblack-3col-1/style.css" type="text/css" media="screen" />
     <link rel="stylesheet" type="text/css" href="/imagicity.css" />
+    <link rel="stylesheet" type="text/css" href="/swipebox/css/swipebox.min.css" />
 
     <script src="http://code.jquery.com/jquery-1.11.1.min.js" type="text/javascript"></script>
 		<script src="//code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
 		<script src="/masonry.pkgd.js"></script>
 		<script src="/imagesloaded.pkgd.js"></script>
+		<script src="/swipebox/js/jquery.swipebox.min.js"></script>
+
 <script type="text/javascript">
 
 
@@ -28,6 +31,38 @@ $(document).ready(function() {
 		var original_height = 0;
 
 		$('p.title').mouseover(function(){$(this).fadeOut(500);});
+
+		$('.item a').click(
+				function (e){
+						var pa = $(this).parents('div.item');
+						var sizes = [700,900,1200];
+						var width = $(document).width(); 
+						var img_size = 700;
+						
+						// Find the largest available image size
+						for (var i = sizes.length; i>0; i--){
+								if (sizes[i] <= width){
+										img_size = sizes[i];
+										break;
+								}
+						}
+						console.debug("size: ", img_size);
+
+						var caption  = $(this).find('img').attr('desc') + '<br />' + $(this).find('img').attr('alt');
+						var img_name = $(this).attr('href');
+
+						img_name = img_name.replace('.jpg', '_' + img_size + '.jpg');
+						e.preventDefault();
+						$.swipebox( [
+								{ href: img_name, title: caption }
+						] );
+
+						console.debug('Output: ', { href: img_name, title: caption });
+
+						// Only load the full image if js is disabled
+						return false;
+
+				});
 
 		$('#mosaic').masonry({
 				columnWidth: 200,
