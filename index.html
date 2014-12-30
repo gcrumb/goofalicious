@@ -72,6 +72,7 @@ $(document).ready(function() {
 				$('#mosaic').masonry();
 		});
 
+/*
 		$('img').hover(
 				function(){
 						console.debug("GO!");
@@ -92,6 +93,23 @@ $(document).ready(function() {
 						$(this).fadeTo(250, 0.8);
 				}
 		);
+*/
+
+		var which_item = $('#counter1');
+
+		$('.item').mouseover(function(){
+				which_item = $(this);
+				// The tooltip position only gets calculated once per tooltip() call,
+				// so reset the position for each element
+				// Happily, nothing gets reset from the initial call.
+				$( document ).tooltip({
+						position: {
+								my: "center bottom-10%",
+								at: "center bottom",
+								of: which_item
+						}
+				});
+		});
 
 		var sizes = [
 				{
@@ -111,6 +129,7 @@ $(document).ready(function() {
 		$( document ).tooltip({
 				items: "div.item",
 				content: function() {
+						which_item = $(this);
 						var element = $( this ).find('img');
 						var output = '';
 						var file_url = '/imageview.html?img=';
@@ -133,7 +152,8 @@ $(document).ready(function() {
 				track: false,
         position: {
             my: "center bottom-10%",
-            at: "center bottom"
+            at: "center bottom",
+						of: which_item
         },
 				open: function (event, ui) {
 						// When opening a new div, remove any previously opened tooltips first.
