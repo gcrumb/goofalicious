@@ -281,14 +281,16 @@ sub get_menu {
 		
 	}
 
+	my $counter   = 0;
+
 	foreach my $img_set (sort keys %img_list){
 		
 		$output .= "<div class='set' id='$img_set'>";
 		
 		my $this_set = $img_list{$img_set};
-		
+
 		foreach my $img (@$this_set){
-			
+
 			my $set_data  = "<div><div class='set-title'>$img_set</div>";
 			$set_data    .= "<div class='set-description'>";
 			$set_data    .= $img->{desc};
@@ -300,8 +302,18 @@ sub get_menu {
 			my $img_title = encode_entities($img->{title});
 			
 			my @thumb_sizes = (300,600);
-			my $random_size = $thumb_sizes[int(rand(scalar(@thumb_sizes)))];
-			
+			my $random_size = 300;
+
+			$counter++;
+
+			# Every now and then throw in a larger one.
+			if ($counter % 15) {
+				$random_size = $thumb_sizes[int(rand(scalar(@thumb_sizes)))];
+			}
+			else {
+				 $random_size = 1200;
+			}
+
 			my %attrs = (
 									 file            => "$dir/$filename",
 									 max_dimension   => $random_size,
@@ -314,7 +326,7 @@ sub get_menu {
 			$thumbnail = $sizer->create() unless $thumbnail;
 			my $link = "<a href='$base_url/$filename'>";
 			my $link_img = "<img tooltip='$base_url/$filename' alt='$img_desc' desc='$img_title' src='$base_url/$thumbnail' />";
-			$output .= "\t<div class='item item$random_size'>$link_img\n";
+			$output .= "\t<div class='item item$random_size counter$counter'>$link$link_img</a>\n";
 			
 			$output .= "<span class='item-desc'>$link$img_desc</a><br />View: \n";
 			foreach my $size (sort keys %sizes){

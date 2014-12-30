@@ -14,18 +14,21 @@ img {
 		opacity: 0.95;
 }
 .img_desc {
-		font-size: 8pt;
-		font-weight: 200;
+		font-size: 10pt;
+		font-weight: 300;
 		opacity: 0.8;
-		font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",helvetica,arial,sans-serif;
+		font-family: 'Yanone Kaffeesatz', sans-serif;
 		text-align: center;
 		border-radius: 5px;
 		width: 300px;
 }
 .img_title {
-		font-size: 9pt;
-		font-weight: bold;
-		font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",helvetica,arial,sans-serif;
+		font-size: 12pt;
+		font-weight: 400;
+/*
+		font-family: 'Yanone Kaffeesatz', sans-serif;
+*/
+		font-family: helvetica,sans-serif;
 		text-align: center;
 		border-radius: 5px;
 		width: 300px;
@@ -64,16 +67,16 @@ span.item-desc {
 		opacity: 0.4;
 		z-index: 992;
 }
-
 .item {
 		-webkit-box-shadow: inset 0px 0px 10px 1px rgba(0,0,0,0.75);
 		-moz-box-shadow: inset 0px 0px 10px 1px rgba(0,0,0,0.75);
 		box-shadow: inset 0px 0px 10px 5px rgba(0,0,0,0.75);
 		background: transparent;
-		border-radius: 6px;
+		border-radius: 6px !important;
 		padding: 0.25em;
 		margin: 0;
 		display: inline;
+		text-align: center;
 }
 
 /* 200,250,300,350,400,450,500 */
@@ -82,87 +85,66 @@ span.item-desc {
 		width: 133px;
 		height: 133px;
 		overflow: hidden;
-		border-radius: 6px !important; 
-		-webkit-box-shadow: inset 0px 0px 10px 1px rgba(0,0,0,0.75);
-		-moz-box-shadow: inset 0px 0px 10px 1px rgba(0,0,0,0.75);
-		box-shadow: inset 0px 0px 10px 5px rgba(0,0,0,0.75);
 }
 .item250 {
 		width: 166px;
 		height: 166px;
 		overflow: hidden;
-		border-radius: 6px;
-		-webkit-box-shadow: inset 0px 0px 10px 1px rgba(0,0,0,0.75);
-		-moz-box-shadow: inset 0px 0px 10px 1px rgba(0,0,0,0.75);
-		box-shadow: inset 0px 0px 10px 5px rgba(0,0,0,0.75);
 }
 .item300 {
 		width: 200px;
 		height: 200px;
 		overflow: hidden;
-		border-radius: 6px;
-		-webkit-box-shadow: inset 0px 0px 10px 1px rgba(0,0,0,0.75);
-		-moz-box-shadow: inset 0px 0px 10px 1px rgba(0,0,0,0.75);
-		box-shadow: inset 0px 0px 10px 5px rgba(0,0,0,0.75);
 }
 .item350 {
 		width: 233px;
 		height: 233px;
 		overflow: hidden;
-		border-radius: 6px;
-		-webkit-box-shadow: inset 0px 0px 10px 1px rgba(0,0,0,0.75);
-		-moz-box-shadow: inset 0px 0px 10px 1px rgba(0,0,0,0.75);
-		box-shadow: inset 0px 0px 10px 5px rgba(0,0,0,0.75);
 }
 .item400 {
 		width: 266px;
 		height: 266px;
 		overflow: hidden;
-		border-radius: 6px;
-		-webkit-box-shadow: inset 0px 0px 10px 1px rgba(0,0,0,0.75);
-		-moz-box-shadow: inset 0px 0px 10px 1px rgba(0,0,0,0.75);
-		box-shadow: inset 0px 0px 10px 5px rgba(0,0,0,0.75);
 }
 .item450 {
 		width: 300px;
 		height: 300px;
 		overflow: hidden;
-		border-radius: 6px;
-		-webkit-box-shadow: inset 0px 0px 10px 1px rgba(0,0,0,0.75);
-		-moz-box-shadow: inset 0px 0px 10px 1px rgba(0,0,0,0.75);
-		box-shadow: inset 0px 0px 10px 5px rgba(0,0,0,0.75);
 }
 .item500 {
 		width: 333px;
 		height: 333px;
 		overflow: hidden;
-		border-radius: 6px;
-		-webkit-box-shadow: inset 0px 0px 10px 1px rgba(0,0,0,0.75);
-		-moz-box-shadow: inset 0px 0px 10px 1px rgba(0,0,0,0.75);
-		box-shadow: inset 0px 0px 10px 5px rgba(0,0,0,0.75);
 }
 .item600 {
 		width: 400px;
 		height: 400px;
 		overflow: hidden;
-		border-radius: 6px;
-		-webkit-box-shadow: inset 0px 0px 10px 1px rgba(0,0,0,0.75);
-		-moz-box-shadow: inset 0px 0px 10px 1px rgba(0,0,0,0.75);
-		box-shadow: inset 0px 0px 10px 5px rgba(0,0,0,0.75);
 }
-
+.item900 {
+		width: 600px;
+		height: 600px;
+		overflow: hidden;
+}
+.item1200 {
+		width: 800px;
+		height: 800px;
+		overflow: hidden;
+}
 .also {
 		position: absolute;
 		width: 95%;
 		top: -60px;
 }
 .title {
+		font-family: 'Yanone Kaffeesatz', sans-serif;
+		font-size: 164pt;
+		font-weight: 400;
+		font-style: all-caps;
+		text-transform: uppercase;
 		border: 0;
 		display: block;
-		opacity: 0.4;
-		color: #fff;
-		font-size: 164pt;
-		font-family: 'helvetica neue',helvetica,arial,sans-serif;
+		color: rgba(255,255,255,0.25);
     z-index: 9999;
     position: relative;
     top: 0;
@@ -170,6 +152,7 @@ span.item-desc {
 		padding: 0;
 		margin: 0;
 		background: transparent;
+		text-shadow: rgba(255, 255, 255, 0.25) -1px -1px 1px, rgba(0, 0, 0, 0.25) 1px 1px 1px;
 }
 
 #slideshow {

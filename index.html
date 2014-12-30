@@ -8,6 +8,8 @@
 
     <title>Imagicity | Photography | Graham Crumb, Proprietor</title>
     <link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.11.0/themes/ui-darkness/jquery-ui.css" />
+    <link href='http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:400,300,200' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Oswald:400,300' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="http://imagicity.com/wp-content/themes/rockinblack-3col-1/style.css" type="text/css" media="screen" />
     <link rel="stylesheet" type="text/css" href="/imagicity.css" />
 
@@ -22,7 +24,10 @@ var running = true;
 
 $(document).ready(function() {
 
-		$('p.title').hover(function(){$(this).fadeOut(200).delay(2000).fadeIn(300);}, function (){});
+		var original_width  = 0;
+		var original_height = 0;
+
+		$('p.title').mouseover(function(){$(this).fadeOut(500);});
 
 		$('#mosaic').masonry({
 				columnWidth: 200,
@@ -34,10 +39,22 @@ $(document).ready(function() {
 
 		$('img').hover(
 				function(){
+						console.debug("GO!");
+						var pa = $(this).parents('div.item');
+						original_width = pa.css('width');
+						console.debug("GO!", original_width, pa);
+						pa.css({'z-index': 8500});
+						var new_width = original_width * 2;
+						var new_height = original_width * 2;
+						pa.animate({'width': new_width, 'height': new_height, 'overflow': 'visible'}, 300);
 						$(this).fadeTo(250, 1.0);
 				},
 				function () {
-						$(this).fadeTo(250, 0.95);
+						console.debug("NO!");
+						var pa = $(this).parents('div.item');
+						pa.css({'z-index': 0});
+						pa.animate({'float': 'none', 'width': original_width, 'height': original_width,  'overflow': 'hidden'}, 300);
+						$(this).fadeTo(250, 0.8);
 				}
 		);
 
