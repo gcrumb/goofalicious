@@ -307,7 +307,9 @@ sub get_menu {
 			$counter++;
 
 			# Every now and then throw in a larger one.
-			if ($counter % 15) {
+			my @intervals = (9,12,15,17);
+			my $interval  = $intervals[int(rand(scalar(@intervals)))];
+			if ($counter % $interval) {
 				$random_size = $thumb_sizes[int(rand(scalar(@thumb_sizes)))];
 			}
 			else {
