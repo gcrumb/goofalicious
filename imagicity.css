@@ -13,7 +13,8 @@
 .ui-tooltip {
 		border-radius: 10px !important;
 		background: rgba(0,0,0,0.8) !important;
-		box-shadow: rgba(255,255,255,0.3) 2px 2px 4px;
+		box-shadow: rgba(0,0,0,0.5) 2px 2px 4px;
+		border: 1px solid rgba(255,255,255,0.4);
 }
 
 .ui-tooltip-content {
