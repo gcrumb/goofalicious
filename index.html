@@ -57,8 +57,6 @@ $(document).ready(function() {
 								{ href: img_name, title: caption }
 						] );
 
-						console.debug('Output: ', { href: img_name, title: caption });
-
 						// Only load the full image if js is disabled
 						return false;
 
@@ -72,29 +70,6 @@ $(document).ready(function() {
 				$('#mosaic').masonry();
 		});
 
-/*
-		$('img').hover(
-				function(){
-						console.debug("GO!");
-						var pa = $(this).parents('div.item');
-						original_width = pa.css('width');
-						console.debug("GO!", original_width, pa);
-						pa.css({'z-index': 8500});
-						var new_width = original_width * 2;
-						var new_height = original_width * 2;
-						pa.animate({'width': new_width, 'height': new_height, 'overflow': 'visible'}, 300);
-						$(this).fadeTo(250, 1.0);
-				},
-				function () {
-						console.debug("NO!");
-						var pa = $(this).parents('div.item');
-						pa.css({'z-index': 0});
-						pa.animate({'float': 'none', 'width': original_width, 'height': original_width,  'overflow': 'hidden'}, 300);
-						$(this).fadeTo(250, 0.8);
-				}
-		);
-*/
-
 		var which_item = $('#counter1');
 
 		$('.item').mouseover(function(){
@@ -104,7 +79,7 @@ $(document).ready(function() {
 				// Happily, nothing gets reset from the initial call.
 				$( document ).tooltip({
 						position: {
-								my: "center bottom-10%",
+								my: "center bottom-30%",
 								at: "center bottom",
 								of: which_item
 						}
@@ -151,9 +126,19 @@ $(document).ready(function() {
 				},
 				track: false,
         position: {
-            my: "center bottom-10%",
+            my: "center bottom",
             at: "center bottom",
-						of: which_item
+						of: which_item,
+/*
+						using: function( position, feedback ) {
+								$( this ).css( position );
+								$( 'div' )
+										.addClass( "arrow" )
+										.addClass( feedback.vertical )
+										.addClass( feedback.horizontal )
+										.appendTo( this );
+						}
+*/
         },
 				open: function (event, ui) {
 						// When opening a new div, remove any previously opened tooltips first.

@@ -7,8 +7,18 @@
 	And again July 2004 to include lists 
   And again March 2011 to add jQuery-based slideshow support 
   And again July 2014 to add Mosaic support
-
+  And again December 2014 to add Swipebox support
 */
+
+.ui-tooltip {
+		border-radius: 10px !important;
+		background: rgba(0,0,0,0.8) !important;
+		box-shadow: rgba(255,255,255,0.3) 2px 2px 4px;
+}
+
+.ui-tooltip-content {
+		background: transparent !important;
+}
 
 img {
 		opacity: 0.95;
