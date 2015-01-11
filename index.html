@@ -11,8 +11,8 @@
     <link href='http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:400,300,200' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Oswald:400,300' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="http://imagicity.com/wp-content/themes/rockinblack-3col-1/style.css" type="text/css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="/imagicity.css" />
     <link rel="stylesheet" type="text/css" href="/swipebox/css/swipebox.min.css" />
+    <link rel="stylesheet" type="text/css" href="/imagicity.css" />
 
     <script src="http://code.jquery.com/jquery-1.11.1.min.js" type="text/javascript"></script>
 		<script src="//code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
@@ -113,7 +113,8 @@ $(document).ready(function() {
 						var img_link = element.attr( "src" );
 						for (var i = 0; i < sizes.length; i++){
 								var this_image = img_link;
-								var size_link = this_image.replace(/_\d{3}/, '');
+								var size_link = this_image.replace(/_\d{4}/, '');
+								size_link = size_link.replace(/_\d{3}/, '');
 								size_link = size_link.replace('http://gallery.imagicity.com/','');
 								output += ' <a target="_blank" href="' + file_url + size_link + '&img_size=' + sizes[i].value + '">' + sizes[i].label + '</a> |'; 
 						}

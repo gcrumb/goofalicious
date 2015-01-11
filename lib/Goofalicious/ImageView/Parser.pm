@@ -533,7 +533,6 @@ sub make_slideshow {
 
 		$output   .= "\n<div id='slideshow'>\n";
 		$output   .= "\n\t<div id='next'><a href='#'>&raquo;</a></div>\n";
-		my $img_id = 0;
     my $first  = " class='active'";
 
     foreach my $img_desc (sort keys %img_list){
@@ -541,7 +540,6 @@ sub make_slideshow {
       my $img     = $img_list{$img_desc};
 
       next unless $img;
-			$img_id++;
 
       my %attrs = (
 		   file            => "$dir/$img",
