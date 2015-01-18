@@ -6,10 +6,8 @@ use File::Basename;
 require Image::Magick::Thumbnail;
 use Image::Size;
 
-#use Image::Resize;
-
 use vars qw($VERSION);
-$VERSION = "0.04";
+$VERSION = "0.05";
 
 =pod
 
@@ -147,6 +145,13 @@ sub orientation {
 sub create {
 
   my $self = shift;
+	my $params = shift || {};
+
+	if (scalar keys %$params){
+		foreach my $this_setting (keys %$params){
+			$self->{$this_setting} = $params->{$this_setting};
+		}
+	}
 
 	return '' unless $self->{img_path} && $self->{img_name};
   my $new_img_name = $self->{img_path} . "/" . $self->{img_name};
@@ -158,7 +163,7 @@ sub create {
 	warn "Couldn't write file '$new_img_name'\n" unless defined $thumb;
   $thumb->Write($new_img_name) if defined $thumb;
 
-  return $self->{img_name};
+  return $new_img_name;
 
 }
 

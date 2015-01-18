@@ -3,9 +3,12 @@ package Goofalicious::ImageView;
 use strict;
 use Apache2::Const qw(:common);
 use Apache2::RequestRec;
+use	Apache2::RequestIO;
 use Apache2::RequestUtil ();
 use File::Basename;
 use Goofalicious::ImageView::Parser;
+use Goofalicious::ImageView::Sizer;
+use Data::Dumper;
 
 =pod
 
@@ -15,7 +18,11 @@ Goofalicious::ImageView - Primitive web data viewer interface
 
 =head1 SYNOPSIS
 
-  <FilesMatch "imageview.html">
+  <FilesMatch "*.html">
+    SetHandler perlscript
+    PerlHandler Goofalicious::ImageView
+  </FilesMatch>
+  <FilesMatch "*.jpg">
     SetHandler perlscript
     PerlHandler Goofalicious::ImageView
   </FilesMatch>
@@ -72,11 +79,38 @@ diag("");
 sub handler {
 
   my $r = shift;
-
-  return DECLINED unless $r->content_type() eq 'text/html';
-
   my $file_writer = new Goofalicious::ImageView::Parser;
   my $file = $r->filename;
+
+	if ($file =~ /.jpg$/i){
+		unless (-f $file){
+
+			if ($file =~ /_(\d+)/){
+
+				my $dir    = '/srv/websites/gallery.imagicity.com';
+				my $size   = $1;
+				my $source = $file;
+
+				$source =~ s!_\d+\.jpg!.jpg!i;
+
+				my $img_attrs = {
+												 file            => $source,
+												 max_dimension   => $size,
+												 suffix          => "size",
+												};
+
+				my $sizer = new Goofalicious::ImageView::Sizer;
+				$sizer->init(%$img_attrs);
+				my $result = $sizer->create();
+
+				$r->sendfile($file);
+				return OK;
+
+			}
+		}
+	}
+
+  return DECLINED unless $r->content_type() eq 'text/html';
 
   # Gather up any GET data being passed.
   my %params;
