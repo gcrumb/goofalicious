@@ -114,7 +114,7 @@ sub init {
 		# get the image size, and print it out
 		my( $width, $height ) = imgsize( $file_to_test );
 		$self->{orientation} = 'landscape';
-		if ($height > $width){
+		if (($height && $width) && $height > $width){
 			$self->{orientation} = 'portrait';
 		}
   }

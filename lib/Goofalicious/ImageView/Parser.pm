@@ -362,7 +362,10 @@ sub get_img_desc {
   #return wantarray ? ($img) : $img unless -r $img_desc_file;
 
 	$image_data->{filename} = $img;
-	my $lines = read_file($img_desc_file, array_ref => 1 ) || ();
+	my $lines = [];
+	if (-f $img_desc_file){
+		$lines = read_file($img_desc_file, array_ref => 1 );
+	}
 	$image_data->{num_lines} = scalar @$lines;
 	$image_data->{raw} = $lines;
 
