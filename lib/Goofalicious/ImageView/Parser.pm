@@ -6,6 +6,7 @@ package Goofalicious::ImageView::Parser;
 use base HTML::Parser;
 use Goofalicious::ImageView::Sizer;
 use File::Slurp;
+use File::Basename;
 use Data::Dumper;
 use HTML::Entities;
 
@@ -326,6 +327,8 @@ sub get_menu {
 			
 			my $thumbnail = $sizer->{file_exists};
 			$thumbnail = $sizer->create() unless $thumbnail;
+			$thumbnail = basename($thumbnail);
+			
 			my $link = "<a href='$base_url/$filename'>";
 			my $link_img = "<img tooltip='$base_url/$filename' alt='$img_desc' desc='$img_title' src='$base_url/$thumbnail' />";
 			$output .= "\t<div class='item item$random_size' id='counter$counter'>$link$link_img</a>\n";
