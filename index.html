@@ -118,7 +118,9 @@ $(document).ready(function() {
 								size_link = size_link.replace('http://gallery.imagicity.com/','');
 								output += ' <a target="_blank" href="' + file_url + size_link + '&img_size=' + sizes[i].value + '">' + sizes[i].label + '</a> |'; 
 						}
-						output += ' <a target="_blank" href="' + this_image.replace(/_\d{3}/, '') + '">full</a>'; 
+						var full_size_link = this_image.replace(/_\d{4}/, '');
+						full_size_link = full_size_link.replace(/_\d{3}/, '');
+						output += ' <a target="_blank" href="' + full_size_link + '">full</a>'; 
 						return '<div class="img_title">' + title + '</div><div class="img_desc"><span style="font-size:1.2em;">' + desc + '</span><br /><br />' + output + '</div>';
 				},
 				show: {
