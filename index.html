@@ -30,6 +30,9 @@ $(document).ready(function() {
 		var original_width  = 0;
 		var original_height = 0;
 
+		$('p.title').html($('p.title').html().replace('-','&nbsp;'));
+
+		setTimeout(function(){$('p.title').fadeIn(500)}, 15000);
 		$('p.title').mouseover(function(){$(this).fadeOut(500);});
 
 		$('.item a').click(
@@ -131,17 +134,7 @@ $(document).ready(function() {
         position: {
             my: "center bottom",
             at: "center bottom",
-						of: which_item,
-/*
-						using: function( position, feedback ) {
-								$( this ).css( position );
-								$( 'div' )
-										.addClass( "arrow" )
-										.addClass( feedback.vertical )
-										.addClass( feedback.horizontal )
-										.appendTo( this );
-						}
-*/
+						of: which_item
         },
 				open: function (event, ui) {
 						// When opening a new div, remove any previously opened tooltips first.
