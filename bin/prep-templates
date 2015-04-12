@@ -86,19 +86,21 @@ my %locations = (
 		);
 
 my @jpegs = `ls $holding\*jpg`;
-my $last_file = '';
+my $last_file = undef;
 
 sub sort_files {
 
-	if ($a =~ /(\d+)\.jpg/){
-		$num_a = $1;
+	# my ($num_a, $num_b);
+	
+	# if ($a =~ /(\d+)\.jpg/){
+	# 	$num_a = $1;
 
-		if ($b =~ /(\d+)\.jpg/){
-			$num_b = $1;
-			return $num_b <=> $num_a;
-		}
+	# 	if ($b =~ /(\d+)\.jpg/){
+	# 		$num_b = $1;
+	# 		return $num_b <=> $num_a;
+	# 	}
 
-	}
+	# }
 	return $a cmp $b;
 }
 
@@ -150,34 +152,35 @@ foreach (sort sort_files @jpegs) {
 	$title = $info->{'Title'} ? $info->{'Title'} : join(" ", @title_elements);
 	#  $title = join(" ", @title_elements);
   chomp $title;
+  my $default_title = $title;
 
   # Don't extend batch mode across different
   # titles.
-  unless (cmp_files($jpeg, $last_file)){
-      $batch = 0;
-      $first = 1;
-  }
-  $last_file = $jpeg;
+  if ($last_file){
+		unless (cmp_files($jpeg, $last_file)){
+			$batch = 0;
+			$first = 1;
+		}
+	}
+	else {
+		$batch = 0;
+		$first = 1;
+	}
+	
+	$last_file = $jpeg;
 
-  if ($file_num > 1){ # && $first != 1){
-      $title = "$title " . sprintf("%02d", $file_num) . " - $location";
-      unless ($batch){
-				if (prompt("Use the same values as before for '$title'?") eq 'y'){
-					$batch++;
-					$first++;
-				}
-      }
-  }
-  else {
-      $batch = 0;
-      $first = 1;
-  }
-
-  my $default_title = $title;
+	unless ($batch){
+		$title = "$title " . sprintf("%02d", $file_num) . " - $location";
+		
+		if ($first > 1 && prompt("Use the same values as before for '$title'?") eq 'y'){
+			$batch++;
+		}
+		$first++;
+	}
 
   my $ok = '';
   unless ($batch){
-      $title = "$title " . sprintf("%02d", $file_num) . " - $location";
+      $title = "$default_title " . sprintf("%02d", $file_num) . " - $location";
       while ($ok = prompt("Title:", $title)){
 				last if $title eq $ok;
 				$title = $ok;
@@ -364,8 +367,9 @@ sub vet_category{
 
 sub cmp_files {
 
-  my ($a, $b) = @_;
-
+	my $a = shift;
+	my $b = shift;
+	
   foreach ($a, $b){
     $_ =~ s!\d!!g;
   }
