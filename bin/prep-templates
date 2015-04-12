@@ -219,7 +219,7 @@ EOF
   close OUT;
 
 	unless ($batch && scalar @categories){
-		@categories = get_categories();
+		@categories = get_categories($info->{'Subject'});
 	}
 
   foreach my $this_category (sort @categories){
@@ -329,9 +329,20 @@ sub prompt{
 
 sub get_categories {
 
+	my $existing = shift || '';
   my @result = ();
-  my $category_text = prompt("Enter 1 or more categories for '$title'");
-
+	my $category_text = '';
+	
+	my @keywords = split(/,/, $existing);
+	foreach my $keyword (@keywords){
+		$keyword =~ s!\s+!!g;
+		$keyword = lc($keyword);
+		$category_text .= "$keyword ";
+	}
+	
+	my $ok = prompt("Enter 1 or more categories for '$title' \[$category_text\]");
+	$category_text = $ok ? $ok : $category_text;
+	
   my @categories = split(/\s+/, $category_text);
 
   foreach my $this_category (@categories){
