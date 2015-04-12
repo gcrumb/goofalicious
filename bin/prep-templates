@@ -88,7 +88,21 @@ my %locations = (
 my @jpegs = `ls $holding\*jpg`;
 my $last_file = '';
 
-foreach (sort @jpegs) {
+sub sort_files {
+
+	if ($a =~ /(\d+)\.jpg/){
+		$num_a = $1;
+
+		if ($b =~ /(\d+)\.jpg/){
+			$num_b = $1;
+			return $num_b <=> $num_a;
+		}
+
+	}
+	return $a cmp $b;
+}
+
+foreach (sort sort_files @jpegs) {
 
   my $jpeg = $_;
   chomp $jpeg;
@@ -105,7 +119,7 @@ foreach (sort @jpegs) {
 
   # Grab metadata
   my $info = ImageInfo($jpeg);
-
+	
   my ($year, $month, @remainder) = split(/\:/, $info->{DigitalCreationDateTime});
   my $date_string = $months{$month} . ", $year";
 
@@ -113,6 +127,11 @@ foreach (sort @jpegs) {
 
   my @title_elements = split(/\-/, $info->{FileName});
   my $location = shift @title_elements;
+
+	# Whoops - legacy hack
+	if ($location eq 'penh'){
+		@title_elements = grep !/pnom/i, @title_elements;
+	}
 
   if (exists($locations{$location})){
     $location = $locations{$location};
@@ -128,7 +147,8 @@ foreach (sort @jpegs) {
     $_ =~ s/$_/\u$_/;
   }
 
-  $title = join(" ", @title_elements);
+	$title = $info->{'Title'} ? $info->{'Title'} : join(" ", @title_elements);
+	#  $title = join(" ", @title_elements);
   chomp $title;
 
   # Don't extend batch mode across different
@@ -142,10 +162,10 @@ foreach (sort @jpegs) {
   if ($file_num > 1){ # && $first != 1){
       $title = "$title " . sprintf("%02d", $file_num) . " - $location";
       unless ($batch){
-	  if (prompt("Use the same values as before for '$title'?") eq 'y'){
-	      $batch++;
-	      $first++;
-	  }
+				if (prompt("Use the same values as before for '$title'?") eq 'y'){
+					$batch++;
+					$first++;
+				}
       }
   }
   else {
@@ -159,8 +179,8 @@ foreach (sort @jpegs) {
   unless ($batch){
       $title = "$title " . sprintf("%02d", $file_num) . " - $location";
       while ($ok = prompt("Title:", $title)){
-	  last if $title eq $ok;
-	  $title = $ok;
+				last if $title eq $ok;
+				$title = $ok;
       }
       chomp $title;
   }
@@ -169,14 +189,15 @@ foreach (sort @jpegs) {
   $dest =~ s!jpg$!nfo!;
 
   unless ($batch && $description){
-      $description = prompt("Enter a description for '$title'");
-      chomp $description;
+		#$description = prompt("Enter a description for '$title'");
+		$description = $info->{'Description'} ? $info->{'Description'} : prompt("Enter a description for '$title'");
+		chomp $description;
       
-      $ok = '';
-      while ($ok = prompt("Confirm description: '$description'")){
-	  $description = $ok;
-      }
-      chomp $description;
+		$ok = '';
+		while ($ok = prompt("Confirm description: '$description'")){
+			$description = $ok;
+		}
+		chomp $description;
   }
 
   print "Creating $dest\n";
