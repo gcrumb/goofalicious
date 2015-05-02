@@ -142,7 +142,7 @@ foreach (sort sort_files @jpegs) {
     $location =~ s/$location/\u$location/;
   }
 
-  my $file_num = pop @title_elements;
+  my $file_num = pop split(/\-/, $info->{FileName});
   $file_num =~ s/\.jpg$//;
 
   foreach (@title_elements){
@@ -150,7 +150,6 @@ foreach (sort sort_files @jpegs) {
   }
 
 	$title = $info->{'Title'} ? $info->{'Title'} : join(" ", @title_elements);
-	#  $title = join(" ", @title_elements);
   chomp $title;
   my $default_title = $title;
 
@@ -169,9 +168,9 @@ foreach (sort sort_files @jpegs) {
 	
 	$last_file = $jpeg;
 
+	$title = "$title " . sprintf("%02d", $file_num) . " - $location";
+
 	unless ($batch){
-		$title = "$title " . sprintf("%02d", $file_num) . " - $location";
-		
 		if ($first > 1 && prompt("Use the same values as before for '$title'?") eq 'y'){
 			$batch++;
 		}

@@ -242,6 +242,9 @@ sub get_menu {
 	}
 
 	# Output a menu of sub-categories.
+	my $slideshow_link = "<strong><a href='$base_url/imageview.html?category=$category_file&slide_show=1'>";
+		$slideshow_link .= "view slideshow</a></strong></p>";
+
 	if (scalar @category_list){
 		my $menu_list = "<p class='also'>See also: |";
 
@@ -254,10 +257,12 @@ sub get_menu {
 		my $category = $self->{parse_params}->{category};
 		$menu_list .= "|";
 		$menu_list .= "\&nbsp;\&nbsp; ";
-		$menu_list .= "<strong><a href='$base_url/imageview.html?category=$category&slide_show=1'>";
-		$menu_list .= "view slideshow</a></strong></p>";
 		
-		$output .= $menu_list;
+		$output .= $menu_list . $slideshow_link;
+	}
+	else {
+		$output .= "<p class='also'>$slideshow_link</p>"; 
+
 	}
 
 	# Sort by description, group by title
@@ -468,14 +473,15 @@ sub make_slideshow {
   }
 
   my $sizer = new Goofalicious::ImageView::Sizer;
-
+	my $category_file;
+	
   if ($self->{parse_params}->{path} && -d $self->{parse_params}->{path}){
 
     my $dir = $self->{parse_params}->{path};
 
     if ($self->{parse_params}->{category}){
 
-      my $category_file = $self->{parse_params}->{category};
+      $category_file = $self->{parse_params}->{category};
 
       if (-r "$dir/$category_file"){
 
@@ -514,18 +520,29 @@ sub make_slideshow {
 
     }
 
-    # Output a menu of sub-categories.
-    if (scalar @category_list){
-      my $menu_list = "<p class='also'>See also: |";
-      foreach my $category (sort @category_list){
-        my $display = $category;
-        $display =~ s!^\d{4}\-(\w+)$!$1!;
-        $menu_list .= "| <a href='$base_url/imageview.html?category=$category'>$display</a> |";
-      }
-      $menu_list .= "|</p>";
+		# Output a menu of sub-categories.
+		my $slideshow_link = "<strong><a href='$base_url/imageview.html?category=$category_file&slide_show=1'>";
+		$slideshow_link .= "view slideshow</a></strong></p>";
 
-      $output .= $menu_list;
-    }
+		if (scalar @category_list){
+			my $menu_list = "<p class='also'>See also: |";
+
+			foreach my $this_category (sort @category_list){
+				my $display = $this_category;
+				$display =~ s!^\d{4}\-(\w+)$!$1!;
+				$menu_list .= "| <a href='$base_url/imageview.html?category=$this_category'>$display</a> |";
+			}
+
+			my $category = $self->{parse_params}->{category};
+			$menu_list .= "|";
+			$menu_list .= "\&nbsp;\&nbsp; ";
+			
+			$output .= $menu_list . $slideshow_link;
+		}
+		else {
+			$output .= "<p class='also'>$slideshow_link</p>"; 
+		}
+
 
     # Sort by description, not by filename
     my %img_list = ();
@@ -533,51 +550,60 @@ sub make_slideshow {
     foreach my $img (@img_list){
 
       $img =~ s/nfo$/jpg/ if $img =~ /nfo$/;
-      $img_list{$self->get_img_desc($dir, $img)} = $img;
+			my $this_title = $self->get_img_desc($dir, $img);
+			$this_title    = $this_title->{title} . " - " . length @img_list; 
+      $img_list{$img} = {
+												 name =>  $img,
+												 desc =>  $this_title
+												};
 
     }
 
+		$output   .= "\n<p class='title' style='display:none;'></p>\n";
 		$output   .= "\n<div id='slideshow'>\n";
-		$output   .= "\n\t<div id='next'><a href='#'>&raquo;</a></div>\n";
     my $first  = " class='active'";
 
     foreach my $img_desc (sort keys %img_list){
 
-      my $img     = $img_list{$img_desc};
-
+      my $img     = $img_list{$img_desc}->{name};
+			my $caption = $img_list{$img_desc}->{title};
+			
       next unless $img;
 
       my %attrs = (
 		   file            => "$dir/$img",
-		   max_dimension   => 700,
+		   max_dimension   => 1200,
 		   suffix          => "size",
 		  );
 
       $sizer->init(%attrs);
 		
-			if ($sizer->orientation() eq 'portrait'){
-				$attrs{max_dimension} = 465;
-				$sizer->init(%attrs);
-			}
-
 			$img_desc     =~ s!\'!\&apos\;!g;
 			$img_desc     =~ s!\"!\&quot\;!g;
 
       my $thumbnail = $sizer->{file_exists};
       $thumbnail    = $sizer->create() unless $thumbnail;
 
-      my $div       = "<div$first>";
-      my $link      = "<a href='$base_url/$img'>";
-      my $caption   = "<div class='caption'>\n\t\t\t$link$img_desc</a>\n\t\t\t</div>";
-      my $link_img  = "<img src='$base_url/$thumbnail' border='0' alt='$img_desc' title='View Image' />";
+      my $link      = "<a href='$base_url/$thumbnail' class='swipebox' title='$img_desc'>";
+      my $link_img  = "<img src='$base_url/$thumbnail' border='0' alt='$img_desc' />";
 
-      $output      .= "\t$div\n\t\t$link$link_img</a>\n\t\t$caption</div>\n";
-      $first        = '';
+      $output      .= "\t\t$link$link_img</a>\n";
 
     }
 
-		$output .= "</div>";
+		$output .= "</div><hr style='clear:both;' />";
+		$output .=<<EOS;
+		<script type="text/javascript">
+        ;( function( \$ ) {
 
+      	\$( '.swipebox' ).swipebox();
+        \$('.swipebox:first').click();
+
+        } )( jQuery );
+    </script>
+EOS
+		
+		
   }
 
   return $output;
