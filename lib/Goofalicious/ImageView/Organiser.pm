@@ -181,7 +181,9 @@ sub recent {
 
   my $year        = $date->year();
   my $this_month  = $months{sprintf("%02d", $date->month() - 1)};
-  my $last_month  = $months{sprintf("%02d", $date->month() - 2)};
+
+	my $last_month_number = $date->month() == 1 ? 11 : $date->month() - 2;
+  my $last_month  = $months{sprintf("%02d", $last_month_number)};
 
   my $files = [];
   my $this_listing = $self->{file_index}->{$year}->{$this_month} || [];

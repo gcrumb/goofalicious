@@ -11,8 +11,7 @@ use Term::Interact;
 use File::Touch;
 use Getopt::Long;
 
-my $template    = '/home/dmcgarry/template.nfo';
-my $holding     = '/home/dmcgarry/holding/';
+my $holding     = '/home/dan/holding/';
 my $website_dir = '/srv/websites/gallery.imagicity.com/';
 my $title       = '';
 my $batch       = 0;
@@ -83,24 +82,13 @@ my %locations = (
 		bali      => 'Bali, Indonesia',
 		lombok    => 'Lombok, Indonesia',
 		penh      => 'Pnom Penh, Cambodia',
+		unicef    => 'UNICEF',
 		);
 
 my @jpegs = `ls $holding\*jpg`;
 my $last_file = undef;
 
 sub sort_files {
-
-	# my ($num_a, $num_b);
-	
-	# if ($a =~ /(\d+)\.jpg/){
-	# 	$num_a = $1;
-
-	# 	if ($b =~ /(\d+)\.jpg/){
-	# 		$num_b = $1;
-	# 		return $num_b <=> $num_a;
-	# 	}
-
-	# }
 	return $a cmp $b;
 }
 
@@ -121,7 +109,14 @@ foreach (sort sort_files @jpegs) {
 
   # Grab metadata
   my $info = ImageInfo($jpeg);
-	
+
+	my $use_exif = 0;
+
+	if ($info->{'Title'} && $info->{'Description'}){
+		if (prompt("Use EXIF data for " . $info->{'Title'} . "?") eq 'y'){
+			$use_exif = 1;
+		}
+	}
   my ($year, $month, @remainder) = split(/\:/, $info->{DigitalCreationDateTime});
   my $date_string = $months{$month} . ", $year";
 
@@ -142,7 +137,7 @@ foreach (sort sort_files @jpegs) {
     $location =~ s/$location/\u$location/;
   }
 
-  my $file_num = pop split(/\-/, $info->{FileName});
+  my $file_num = pop @title_elements;
   $file_num =~ s/\.jpg$//;
 
   foreach (@title_elements){
@@ -170,7 +165,7 @@ foreach (sort sort_files @jpegs) {
 
 	$title = "$title " . sprintf("%02d", $file_num) . " - $location";
 
-	unless ($batch){
+	unless ($batch || $use_exif){
 		if ($first > 1 && prompt("Use the same values as before for '$title'?") eq 'y'){
 			$batch++;
 		}
@@ -180,10 +175,12 @@ foreach (sort sort_files @jpegs) {
   my $ok = '';
   unless ($batch){
       $title = "$default_title " . sprintf("%02d", $file_num) . " - $location";
-      while ($ok = prompt("Title:", $title)){
-				last if $title eq $ok;
-				$title = $ok;
-      }
+			unless ($use_exif){
+				while ($ok = prompt("Title:", $title)){
+					last if $title eq $ok;
+					$title = $ok;
+				}
+			}
       chomp $title;
   }
 
@@ -196,8 +193,10 @@ foreach (sort sort_files @jpegs) {
 		chomp $description;
       
 		$ok = '';
-		while ($ok = prompt("Confirm description: '$description'")){
-			$description = $ok;
+		unless ($use_exif){
+			while ($ok = prompt("Confirm description: '$description'")){
+				$description = $ok;
+			}
 		}
 		chomp $description;
   }
@@ -246,10 +245,10 @@ EOF
       }
     }
     else {
-
-      my $response = prompt("Category '$this_category' doesn't exist. Create it?");
-      next unless $response eq 'y';
-
+			unless ($use_exif){
+				my $response = prompt("Category '$this_category' doesn't exist. Create it?");
+				next unless $response eq 'y';
+			}
     }
 
     open CATEGORY, ">>$website_dir/$this_category"
@@ -338,8 +337,12 @@ sub get_categories {
 		$keyword = lc($keyword);
 		$category_text .= "$keyword ";
 	}
-	
-	my $ok = prompt("Enter 1 or more categories for '$title' \[$category_text\]");
+
+	my $ok = '';
+
+	unless ($existing){
+		$ok = prompt("Enter 1 or more categories for '$title' \[$category_text\]");
+	}
 	$category_text = $ok ? $ok : $category_text;
 	
   my @categories = split(/\s+/, $category_text);
@@ -350,14 +353,16 @@ sub get_categories {
 
   my $output;
 
-  while ($output = prompt("Any more?")){
+  unless ($existing){
+		while ($output = prompt("Any more?")){
 
-    my @additional = split(/\s+/, $output);
-
-    foreach my $more (@additional){
-      push (@result, $more) if vet_category($more);
-    }
-  }
+			my @additional = split(/\s+/, $output);
+			
+			foreach my $more (@additional){
+				push (@result, $more) if vet_category($more);
+			}
+		}
+	}
 
   return @result;
 
